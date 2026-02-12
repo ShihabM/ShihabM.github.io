@@ -21,7 +21,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 80px;
+  padding: 24px 40px;
+}
+
+@media screen and (min-width: 768px) {
+  .navbar {
+    padding: 24px 80px;
+  }
 }
 
 .logo {
