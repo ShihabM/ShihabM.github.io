@@ -42,7 +42,7 @@ nav a:hover {
 }
 
 .hero-content {
-  max-width: 520px;
+  max-width: 650px;
 }
 
 .hero h1 {
@@ -65,7 +65,7 @@ nav a:hover {
   border: none;
   padding: 14px 28px;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
   transition: 0.2s ease;
 }
@@ -79,11 +79,6 @@ nav a:hover {
   font-size: 14px;
   color: #777;
   cursor: pointer;
-}
-
-.hero-image img {
-  max-width: 420px;
-  width: 100%;
 }
 
 @media (max-width: 900px) {
@@ -100,4 +95,17 @@ nav a:hover {
   .hero h1 {
     font-size: 40px;
   }
+}
+
+.img-bottom-right {
+  position: fixed;
+  bottom: -5vh;
+  right: -5vw;
+  height: 105vh;
+  width: auto;
+  max-width: none;
+  max-height: none;
+  transform: none;
+  z-index: 0;
+  pointer-events: none;
 }
