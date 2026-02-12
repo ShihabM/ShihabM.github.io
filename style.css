@@ -10,6 +10,13 @@ body {
   color: #111;
 }
 
+.content-container {
+  max-width: 720px;
+  margin: 20px auto 120px auto;
+  padding: 0 24px;
+  line-height: 1.4;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
