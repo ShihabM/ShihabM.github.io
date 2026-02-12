@@ -21,7 +21,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 20px;
+    padding: 24px 30px;
 }
 
 @media screen and (min-width: 768px) {
@@ -41,6 +41,18 @@ body {
 .logo-icon {
     height: 1.2em;
     width: auto;
+}
+
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo-link:visited {
+    color: inherit;
 }
 
 nav a {
@@ -106,7 +118,7 @@ nav a:hover {
     .hero {
         flex-direction: column;
         text-align: center;
-        padding: 60px 40px;
+        padding: 40px 40px 20px 40px;
     }
 
     .hero-image {
@@ -120,12 +132,10 @@ nav a:hover {
 
 .img-bottom-right {
     position: relative;
-    bottom: auto;
-    right: auto;
     height: auto;
-    width: 120%;
+    width: 135%;
     max-width: none;
-    margin: 20px auto 0 auto;
+    margin: 10px auto 0 auto;
     display: block;
 }
 
