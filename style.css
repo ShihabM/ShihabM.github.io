@@ -18,8 +18,16 @@ body {
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-weight: 600;
   font-size: 20px;
+}
+
+.logo-icon {
+  height: 1.2em;
+  width: auto;
 }
 
 nav a {
