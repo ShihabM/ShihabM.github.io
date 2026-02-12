@@ -134,11 +134,11 @@ nav a:hover {
 .img-bottom-right {
     position: relative;
     height: auto;
-    width: 150%;
+    width: 180%;
     max-width: none;
     margin: 0 auto;
     display: block;
-    transform: translateX(-15%);
+    transform: translateX(-24%);
 }
 
 @media screen and (min-width: 768px) {
