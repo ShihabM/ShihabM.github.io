@@ -8,6 +8,7 @@
 body {
     background: #f9f9f9;
     color: #111;
+    overflow-x: hidden;
 }
 
 .content-container {
@@ -133,10 +134,11 @@ nav a:hover {
 .img-bottom-right {
     position: relative;
     height: auto;
-    width: 135%;
+    width: 150%;
     max-width: none;
-    margin: 10px auto 0 auto;
+    margin: 0 auto;
     display: block;
+    transform: translateX(-15%);
 }
 
 @media screen and (min-width: 768px) {
