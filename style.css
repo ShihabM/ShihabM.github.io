@@ -21,7 +21,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 40px;
+    padding: 24px 20px;
 }
 
 @media screen and (min-width: 768px) {
@@ -123,8 +123,10 @@ nav a:hover {
     bottom: auto;
     right: auto;
     height: auto;
-    width: 100%;
-    margin-top: 40px;
+    width: 120%;
+    max-width: none;
+    margin: 20px auto 0 auto;
+    display: block;
 }
 
 @media screen and (min-width: 768px) {
