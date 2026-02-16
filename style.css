@@ -155,8 +155,8 @@ nav a:hover {
     .img-bottom-right {
         position: fixed;
         bottom: -5vh;
-        right: -5vw;
-        height: 105vh;
+        right: 20vw;
+        height: 100vh;
         width: auto;
         max-width: none;
         max-height: none;
