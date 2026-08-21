@@ -141,7 +141,7 @@ nav a:hover {
     .hero {
         flex-direction: column;
         text-align: center;
-        padding: 40px 40px 20px 40px;
+        padding: 40px 40px 0;
     }
 
     .hero-image {
@@ -159,17 +159,19 @@ nav a:hover {
 
 .img-bottom-right {
     position: relative;
+    left: 50%;
     height: auto;
     width: 180%;
     max-width: none;
     margin: 0 auto;
     display: block;
-    transform: translateX(-24%);
+    transform: translateX(-78%);
 }
 
 @media screen and (min-width: 768px) {
     .img-bottom-right {
         position: fixed;
+        left: auto;
         bottom: -5vh;
         right: 20vw;
         height: 100vh;
