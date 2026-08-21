@@ -116,6 +116,7 @@ nav a:hover {
 
 .download-cta img {
     display: block;
+    cursor: pointer;
 }
 
 .press-kit-link {
