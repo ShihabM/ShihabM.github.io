@@ -272,13 +272,13 @@ a:hover {
 
 @media screen and (min-width: 768px) {
     .hero {
-        margin-bottom: 5vh;
+        margin-bottom: 14vh;
     }
 
     .img-bottom-right {
         position: absolute;
         left: auto;
-        bottom: -5vh;
+        bottom: -14vh;
         right: 20vw;
         height: 100vh;
         width: auto;
