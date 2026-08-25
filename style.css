@@ -102,10 +102,6 @@ a:hover {
     color: #2563eb;
 }
 
-li {
-    cursor: pointer;
-}
-
 .content-container {
     max-width: 720px;
     margin: 20px auto 120px auto;
@@ -209,16 +205,19 @@ nav a:hover {
 
 .download-cta {
     display: inline-flex;
+    cursor: pointer;
 }
 
 .download-cta img {
     display: block;
+    cursor: pointer;
 }
 
 .press-kit-link {
     color: #888;
     font-size: 14px;
     font-weight: 500;
+    cursor: pointer;
     transition: color 0.2s ease;
 }
 
@@ -230,6 +229,7 @@ nav a:hover {
     margin-top: 24px;
     font-size: 14px;
     color: #777;
+    cursor: pointer;
 }
 
 @media (max-width: 900px) {
