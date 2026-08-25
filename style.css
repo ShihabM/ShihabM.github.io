@@ -9,6 +9,82 @@ body {
     background: #f9f9f9;
     color: #111;
     overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+    isolation: isolate;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    pointer-events: none;
+    z-index: -1;
+    will-change: transform;
+}
+
+body::before {
+    top: -22vh;
+    left: -18vw;
+    width: 136vw;
+    height: 88vh;
+    background:
+        radial-gradient(ellipse at 10% 28%, rgba(80, 216, 242, 0.5) 0%, rgba(80, 216, 242, 0) 54%),
+        radial-gradient(ellipse at 40% 15%, rgba(102, 164, 242, 0.42) 0%, rgba(102, 164, 242, 0) 52%),
+        radial-gradient(ellipse at 69% 22%, rgba(151, 126, 235, 0.34) 0%, rgba(151, 126, 235, 0) 54%),
+        radial-gradient(ellipse at 95% 18%, rgba(244, 146, 213, 0.38) 0%, rgba(244, 146, 213, 0) 52%);
+    filter: blur(52px);
+    opacity: 0.84;
+    animation: cloud-drift-primary 24s ease-in-out infinite alternate;
+}
+
+body::after {
+    top: -16vh;
+    left: -24vw;
+    width: 148vw;
+    height: 72vh;
+    background:
+        radial-gradient(ellipse at 30% 32%, rgba(91, 202, 242, 0.3) 0%, rgba(91, 202, 242, 0) 48%),
+        radial-gradient(ellipse at 58% 16%, rgba(132, 132, 236, 0.28) 0%, rgba(132, 132, 236, 0) 50%),
+        radial-gradient(ellipse at 83% 30%, rgba(236, 137, 221, 0.28) 0%, rgba(236, 137, 221, 0) 48%);
+    filter: blur(72px);
+    opacity: 0.72;
+    animation: cloud-drift-secondary 31s ease-in-out infinite alternate;
+}
+
+@keyframes cloud-drift-primary {
+    0% {
+        transform: translate3d(-2vw, -1vh, 0) scale(1);
+    }
+
+    50% {
+        transform: translate3d(2vw, 1.5vh, 0) scale(1.035);
+    }
+
+    100% {
+        transform: translate3d(4vw, -0.5vh, 0) scale(1.015);
+    }
+}
+
+@keyframes cloud-drift-secondary {
+    0% {
+        transform: translate3d(3vw, 1vh, 0) scale(1.025);
+    }
+
+    50% {
+        transform: translate3d(-1vw, -1.5vh, 0) scale(1);
+    }
+
+    100% {
+        transform: translate3d(-4vw, 1vh, 0) scale(1.04);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+        animation: none;
+    }
 }
 
 a {
