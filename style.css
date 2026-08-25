@@ -92,6 +92,15 @@ a {
     /* color: inherit; */
 }
 
+a[href],
+a[href] *,
+button,
+button *,
+[role="button"],
+[role="button"] * {
+    cursor: pointer !important;
+}
+
  /* a:visited {
     color: inherit;
 } */
