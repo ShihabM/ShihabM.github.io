@@ -150,8 +150,19 @@ a:hover {
 }
 
 .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px 30px;
     padding: 28px 30px;
     background: #101010;
+}
+
+.footer-copyright {
+    color: #5f5f5f;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .footer-nav {
