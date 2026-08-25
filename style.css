@@ -89,7 +89,17 @@ body::after {
 
 a {
     text-decoration: none;
-    /* color: inherit; */
+    color: #111;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+a:visited {
+    color: #111;
+}
+
+a:hover {
+    color: #2563eb;
 }
 
 a[href],
@@ -100,10 +110,6 @@ button *,
 [role="button"] * {
     cursor: pointer !important;
 }
-
- /* a:visited {
-    color: inherit;
-} */
 
 .content-container {
     max-width: 720px;
