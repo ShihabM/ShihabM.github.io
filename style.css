@@ -189,6 +189,18 @@ a:hover {
     color: #c7c7c7;
 }
 
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-social-icon {
+    display: block;
+    width: 16px;
+    height: 16px;
+}
+
 @media screen and (min-width: 768px) {
     .site-footer {
         padding: 28px 80px;
