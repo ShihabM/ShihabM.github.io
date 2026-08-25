@@ -121,11 +121,11 @@ a {
     align-items: center;
     gap: 8px;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .logo-icon {
-    height: 1.25em;
+    height: 1.3em;
     width: auto;
 }
 
@@ -187,29 +187,30 @@ nav a:hover {
 
 .download-cta {
     display: inline-flex;
-    cursor: pointer;
 }
 
-.download-cta:hover {
-    cursor: pointer;
+.download-cta,
+.download-cta:hover,
+.download-cta img,
+.download-cta:hover img,
+.press-kit-link,
+.press-kit-link:hover {
+    cursor: pointer !important;
 }
 
 .download-cta img {
     display: block;
-    pointer-events: none;
 }
 
 .press-kit-link {
     color: #888;
     font-size: 14px;
     font-weight: 500;
-    cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .press-kit-link:hover {
     color: #3d8ef2;
-    cursor: pointer;
 }
 
 .demo-link {
