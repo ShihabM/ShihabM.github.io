@@ -102,10 +102,6 @@ a:hover {
     color: #2563eb;
 }
 
-li {
-    cursor: pointer;
-}
-
 .content-container {
     max-width: 720px;
     margin: 20px auto 120px auto;
@@ -277,4 +273,21 @@ nav a:hover {
         z-index: 0;
         pointer-events: none;
     }
+}
+
+a[href],
+button:not(:disabled),
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="reset"]:not(:disabled),
+select:not(:disabled),
+summary,
+[role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+}
+
+a[href] *,
+button:not(:disabled) *,
+[role="button"]:not([aria-disabled="true"]) * {
+    cursor: inherit;
 }
