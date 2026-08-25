@@ -127,12 +127,13 @@ a {
 .logo-icon {
     height: 1.3em;
     width: auto;
+    border-radius: 26%;
 }
 
 .logo-link {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     text-decoration: none;
     color: inherit;
 }
