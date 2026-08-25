@@ -102,6 +102,10 @@ a:hover {
     color: #2563eb;
 }
 
+li {
+    cursor: pointer;
+}
+
 .content-container {
     max-width: 720px;
     margin: 20px auto 120px auto;
