@@ -6,7 +6,7 @@
 }
 
 :root {
-    --interactive-cursor: url("/cursor-hand.svg") 14 2, pointer;
+    --interactive-cursor: url("/cursor-hand.png") 14 2, pointer;
 }
 
 body {
