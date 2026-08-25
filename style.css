@@ -5,6 +5,10 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+:root {
+    --interactive-cursor: url("/cursor-hand.svg") 14 2, pointer;
+}
+
 body {
     background: #f9f9f9;
     color: #111;
@@ -152,7 +156,7 @@ a:hover {
     [role="tab"]:not([aria-disabled="true"]),
     [role="menuitem"]:not([aria-disabled="true"])
 ) * {
-    cursor: pointer !important;
+    cursor: var(--interactive-cursor) !important;
 }
 
 .content-container {
@@ -266,7 +270,7 @@ nav a:hover {
 .download-cta:hover img,
 .press-kit-link,
 .press-kit-link:hover {
-    cursor: pointer !important;
+    cursor: var(--interactive-cursor) !important;
 }
 
 .download-cta img {
@@ -288,7 +292,7 @@ nav a:hover {
     margin-top: 24px;
     font-size: 14px;
     color: #777;
-    cursor: pointer;
+    cursor: var(--interactive-cursor);
 }
 
 @media (max-width: 900px) {
