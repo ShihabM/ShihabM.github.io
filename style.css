@@ -10,6 +10,8 @@ body {
     color: #111;
     overflow-x: hidden;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     position: relative;
     isolation: isolate;
 }
@@ -103,6 +105,8 @@ a:hover {
 }
 
 .content-container {
+    flex: 1;
+    width: 100%;
     max-width: 720px;
     margin: 20px auto 120px auto;
     padding: 0 24px;
@@ -111,7 +115,7 @@ a:hover {
 
 .navbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     padding: 24px 30px;
 }
@@ -148,25 +152,37 @@ a:hover {
     color: inherit;
 }
 
-nav a,
-nav a:visited {
-    margin-left: 32px;
-    text-decoration: none;
-    color: #000;
+.site-footer {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    padding: 28px 30px;
+    background: #101010;
+}
+
+.footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px 30px;
+}
+
+.footer-nav a,
+.footer-nav a:visited {
+    color: #929292;
     font-size: 14px;
     font-weight: 400;
-    transition: font-weight 0.15s ease;
+    transition: color 0.2s ease;
 }
 
-nav a:hover {
-    color: #000;
-    font-weight: 600;
+.footer-nav a:hover {
+    color: #c7c7c7;
 }
 
-@media (max-width: 500px) {
-    nav a,
-    nav a:visited {
-        margin-left: 20px;
+@media screen and (min-width: 768px) {
+    .site-footer {
+        padding: 28px 80px;
     }
 }
 
