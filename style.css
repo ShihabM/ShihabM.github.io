@@ -114,9 +114,13 @@ nav a:hover {
     cursor: pointer;
 }
 
+.download-cta:hover {
+    cursor: pointer;
+}
+
 .download-cta img {
     display: block;
-    cursor: pointer;
+    pointer-events: none;
 }
 
 .press-kit-link {
@@ -129,6 +133,7 @@ nav a:hover {
 
 .press-kit-link:hover {
     color: #3d8ef2;
+    cursor: pointer;
 }
 
 .demo-link {
