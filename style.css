@@ -306,18 +306,15 @@ a:hover {
 }
 
 a[href],
+a[href] *,
 button:not(:disabled),
+button:not(:disabled) *,
 input[type="button"]:not(:disabled),
 input[type="submit"]:not(:disabled),
 input[type="reset"]:not(:disabled),
 select:not(:disabled),
 summary,
-[role="button"]:not([aria-disabled="true"]) {
-    cursor: pointer;
-}
-
-a[href] *,
-button:not(:disabled) *,
+[role="button"]:not([aria-disabled="true"]),
 [role="button"]:not([aria-disabled="true"]) * {
-    cursor: inherit;
+    cursor: pointer;
 }
