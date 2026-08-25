@@ -10,8 +10,6 @@ body {
     color: #111;
     overflow-x: hidden;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
     position: relative;
     isolation: isolate;
 }
@@ -105,7 +103,6 @@ a:hover {
 }
 
 .content-container {
-    flex: 1;
     width: 100%;
     max-width: 720px;
     margin: 20px auto 120px auto;
@@ -153,9 +150,6 @@ a:hover {
 }
 
 .site-footer {
-    position: relative;
-    z-index: 1;
-    margin-top: auto;
     padding: 28px 30px;
     background: #101010;
 }
@@ -187,6 +181,7 @@ a:hover {
 }
 
 .hero {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -277,9 +272,9 @@ a:hover {
 
 @media screen and (min-width: 768px) {
     .img-bottom-right {
-        position: fixed;
+        position: absolute;
         left: auto;
-        bottom: -5vh;
+        bottom: 0;
         right: 20vw;
         height: 100vh;
         width: auto;
