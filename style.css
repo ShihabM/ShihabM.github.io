@@ -329,6 +329,8 @@ a:hover {
 
 .download-cta img {
     display: block;
+    width: 160px;
+    height: auto;
 }
 
 .press-kit-link {
