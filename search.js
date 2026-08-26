@@ -311,6 +311,32 @@
             ? (details.credits?.crew || []).filter((person) => person.job === "Director").slice(0, 3).map((person) => person.name).join(", ")
             : (details.created_by || []).slice(0, 3).map((person) => person.name).join(", ");
         const cast = (details.credits?.cast || []).slice(0, 10);
+        const crewRoleOrder = [
+            "Creator",
+            "Director",
+            "Executive Producer",
+            "Producer",
+            "Screenplay",
+            "Writer",
+            "Director of Photography",
+            "Original Music Composer"
+        ];
+        const crewRole = (person) => person.job || person.department || person.known_for_department || "Crew";
+        const crewPriority = (person) => {
+            const priority = crewRoleOrder.indexOf(crewRole(person));
+            return priority === -1 ? crewRoleOrder.length : priority;
+        };
+        const crewCandidates = [
+            ...(kind === "tv" ? (details.created_by || []).map((person) => ({ ...person, job: "Creator" })) : []),
+            ...(details.credits?.crew || [])
+        ].sort((first, second) => crewPriority(first) - crewPriority(second));
+        const seenCrew = new Set();
+        const crew = crewCandidates.filter((person) => {
+            const key = person.id || person.name;
+            if (!key || seenCrew.has(key)) return false;
+            seenCrew.add(key);
+            return true;
+        }).slice(0, 10);
         const providerRegion = details["watch/providers"]?.results?.US || {};
         const providerSource = providerRegion.flatrate?.length
             ? providerRegion.flatrate
@@ -349,17 +375,20 @@
             </div>`;
         }).join("");
 
-        const castCards = cast.map((person) => {
+        const personCards = (people, subtitleFor) => people.map((person) => {
             const profile = imageURL(person.profile_path, "w185");
             const initials = person.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("");
+            const subtitle = subtitleFor(person);
             return `<article class="detail-person">
                 <div class="detail-person-image">
-                    ${profile ? `<img src="${escapeHTML(profile)}" alt="">` : `<span>${escapeHTML(initials)}</span>`}
+                    ${profile ? `<img src="${escapeHTML(profile)}" alt="" loading="lazy" decoding="async">` : `<span>${escapeHTML(initials)}</span>`}
                 </div>
                 <strong>${escapeHTML(person.name)}</strong>
-                ${person.character ? `<span>${escapeHTML(person.character)}</span>` : ""}
+                ${subtitle ? `<span>${escapeHTML(subtitle)}</span>` : ""}
             </article>`;
         }).join("");
+        const castCards = personCards(cast, (person) => person.character);
+        const crewCards = personCards(crew, crewRole);
 
         const metrics = [
             detailMetric("★", "TMDB", rating),
@@ -420,6 +449,11 @@
                     <section class="detail-section">
                         <div class="detail-section-heading"><div><h3>Cast</h3><p>${escapeHTML(cast.length)} featured cast members</p></div></div>
                         <div class="detail-people">${castCards}</div>
+                    </section>` : ""}
+                ${crewCards ? `
+                    <section class="detail-section">
+                        <div class="detail-section-heading"><div><h3>Crew</h3><p>${escapeHTML(crew.length)} featured crew members</p></div></div>
+                        <div class="detail-people">${crewCards}</div>
                     </section>` : ""}
                 ${aboutRows ? `
                     <section class="detail-section detail-section--about">
