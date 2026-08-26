@@ -133,7 +133,7 @@ a:hover {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: calc(24px + env(safe-area-inset-top)) calc(30px + env(safe-area-inset-right)) 24px calc(30px + env(safe-area-inset-left));
+    padding: 24px calc(30px + env(safe-area-inset-right)) 24px calc(30px + env(safe-area-inset-left));
 }
 
 @media screen and (min-width: 768px) {
@@ -174,7 +174,7 @@ a:hover {
     align-items: center;
     justify-content: flex-start;
     gap: 12px 30px;
-    padding: 28px calc(30px + env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) calc(30px + env(safe-area-inset-left));
+    padding: 28px calc(30px + env(safe-area-inset-right)) 28px calc(30px + env(safe-area-inset-left));
     background: #101010;
 }
 
