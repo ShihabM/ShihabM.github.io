@@ -304,9 +304,9 @@ a:hover {
 
 .hero h1 {
     font-size: 56px;
-    line-height: 1.1;
+    line-height: 1.05;
     margin-bottom: 24px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .hero p {
