@@ -1331,54 +1331,9 @@ body.search-fallback-entering .search-page-body {
     line-height: 1.35;
 }
 
-.detail-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 25px;
-}
-
-.detail-action {
-    display: inline-flex;
-    min-width: 0;
-    min-height: 60px;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 0 16px;
-    border: 1px solid rgba(91, 190, 245, 0.18);
-    border-radius: 999px;
-    background: rgba(4, 22, 31, 0.58);
-    color: #f7f7f7;
-    font-size: 16px;
-    font-weight: 680;
-    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
-}
-
-.detail-action:hover {
-    transform: translateY(-1px);
-}
-
-.detail-action:focus-visible,
 .detail-read-more:focus-visible {
     outline: 3px solid #67cfff;
     outline-offset: 3px;
-}
-
-.detail-action-icon {
-    font-size: 22px;
-    font-weight: 500;
-    line-height: 1;
-}
-
-.detail-action--watchlist.is-active {
-    border-color: transparent;
-    background: #e84d70;
-}
-
-.detail-action--watched.is-active {
-    border-color: transparent;
-    background: #0aa5f7;
 }
 
 .detail-overview {
@@ -1465,6 +1420,14 @@ body.search-fallback-entering .search-page-body {
 .detail-metric-icon--rt {
     border-radius: 50%;
     background: #f04444;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.detail-metric-icon--rt-audience {
+    border-radius: 50%;
+    background: #ff8a38;
     color: #fff;
     font-size: 8px;
     font-weight: 850;
@@ -1777,16 +1740,6 @@ body.search-fallback-entering .search-page-body {
 
     .detail-release {
         font-size: 16px;
-    }
-
-    .detail-actions {
-        gap: 10px;
-    }
-
-    .detail-action {
-        min-height: 58px;
-        padding: 0 12px;
-        font-size: 15px;
     }
 
     .detail-overview {

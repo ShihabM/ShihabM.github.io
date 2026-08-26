@@ -341,15 +341,73 @@
         return value ? `${value} /${scale || denominator}` : "";
     };
 
-    const fetchExternalRatingMetrics = (imdbID, kind) => {
+    const getTextWithTimeout = async (url, timeout = 10000) => {
+        const controller = new AbortController();
+        const timer = window.setTimeout(() => controller.abort(), timeout);
+        try {
+            const response = await fetch(url, { signal: controller.signal });
+            if (!response.ok) throw new Error(`Request failed (${response.status})`);
+            return response.text();
+        } finally {
+            window.clearTimeout(timer);
+        }
+    };
+
+    const rottenTomatoesURL = (details, kind, withYear) => {
+        const slug = mediaTitle(details)
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replaceAll(" - ", "_")
+            .replaceAll(": ", "_")
+            .replaceAll(" ", "_")
+            .replaceAll(":", "")
+            .replaceAll("'", "")
+            .replaceAll("-", "_")
+            .replace(/[^a-z0-9_]/g, "");
+        const year = mediaDate(details).slice(0, 4);
+        return `https://www.rottentomatoes.com/${kind === "movie" ? "m" : "tv"}/${slug}${withYear && year ? `_${year}` : ""}`;
+    };
+
+    const parseRottenTomatoesScores = (html) => {
+        const documentFragment = new DOMParser().parseFromString(html, "text/html");
+        const scorecard = documentFragment.querySelector('script[data-json="mediaScorecard"]');
+        const data = scorecard?.textContent ? JSON.parse(scorecard.textContent) : {};
+        const critics = data.criticsScore?.scorePercent ||
+            (data.criticsScore?.score ? `${data.criticsScore.score}%` : "") ||
+            html.match(/Tomatometer[^0-9%]{0,160}(\d{1,3})%/i)?.[1]?.concat("%") || "";
+        const audience = data.audienceScore?.scorePercent ||
+            (data.audienceScore?.score ? `${data.audienceScore.score}%` : "") ||
+            html.match(/Popcornmeter[^0-9%]{0,160}(\d{1,3})%/i)?.[1]?.concat("%") || "";
+        if (!critics && !audience) throw new Error("Rotten Tomatoes scores were empty");
+        return { critics, audience };
+    };
+
+    const fetchRottenTomatoesScores = async (details, kind) => {
+        const relayAttempts = [true, false].map(async (withYear) => {
+            const relay = new URL("https://api.allorigins.win/raw");
+            relay.searchParams.set("url", rottenTomatoesURL(details, kind, withYear));
+            return parseRottenTomatoesScores(await getTextWithTimeout(relay));
+        });
+        const reader = `https://r.jina.ai/${rottenTomatoesURL(details, kind, false)}`;
+        const results = await Promise.allSettled([
+            ...relayAttempts,
+            getTextWithTimeout(reader).then(parseRottenTomatoesScores)
+        ]);
+        return results.find((result) => result.status === "fulfilled")?.value || {};
+    };
+
+    const fetchExternalRatingMetrics = (details, kind) => {
+        const imdbID = details.external_ids?.imdb_id || details.imdb_id || "";
         if (!/^tt\d+$/.test(imdbID)) return Promise.resolve([]);
         const cacheKey = `${kind}:${imdbID}`;
         if (externalRatingCache.has(cacheKey)) return externalRatingCache.get(cacheKey);
 
         const request = Promise.allSettled([
             getJSON(new URL(`https://v3-cinemeta.strem.io/meta/${kind === "movie" ? "movie" : "series"}/${imdbID}.json`)),
-            getJSON(wikidataRatingsURL(imdbID))
-        ]).then(([cinemetaResult, wikidataResult]) => {
+            getJSON(wikidataRatingsURL(imdbID)),
+            fetchRottenTomatoesScores(details, kind)
+        ]).then(([cinemetaResult, wikidataResult, rottenTomatoesResult]) => {
             const bindings = wikidataResult.status === "fulfilled"
                 ? wikidataResult.value?.results?.bindings || []
                 : [];
@@ -357,7 +415,9 @@
                 entityID(entry.reviewer) === reviewer && (!method || entityID(entry.method) === method)
             )?.score?.value || "";
 
-            const critics = formattedSourceScore(scoreFrom("Q105584", "Q108403393"), "100");
+            const rottenTomatoes = rottenTomatoesResult.status === "fulfilled" ? rottenTomatoesResult.value : {};
+            const critics = rottenTomatoes.critics || formattedSourceScore(scoreFrom("Q105584", "Q108403393"), "100");
+            const audience = rottenTomatoes.audience || formattedSourceScore(scoreFrom("Q105584", "Q131100566"), "100");
             const letterboxd = formattedSourceScore(scoreFrom("Q18709181"), "5");
             const metacritic = formattedSourceScore(scoreFrom("Q150248"), "100");
             const cinemetaRating = cinemetaResult.status === "fulfilled"
@@ -368,7 +428,8 @@
                 : formattedSourceScore(scoreFrom("Q37312"), "10");
 
             return [
-                { symbol: "RT", label: "Critics", value: critics, tone: "rt" },
+                { symbol: "RT", label: "Critics", value: critics || "—", tone: "rt" },
+                { symbol: "RT", label: "Audience", value: audience || "—", tone: "rt-audience" },
                 { symbol: "LB", label: "Letterboxd", value: letterboxd, tone: "letterboxd" },
                 { symbol: "IMDb", label: "IMDb", value: imdb, tone: "imdb" },
                 { symbol: "MC", label: "Metacritic", value: metacritic, tone: "metacritic" }
@@ -380,8 +441,7 @@
     };
 
     const hydrateExternalRatingMetrics = async (details, kind, request) => {
-        const imdbID = details.external_ids?.imdb_id || details.imdb_id || "";
-        const ratingMetrics = await fetchExternalRatingMetrics(imdbID, kind);
+        const ratingMetrics = await fetchExternalRatingMetrics(details, kind);
         if (request.signal.aborted || detailRequest !== request || !ratingMetrics.length) return;
         const metrics = dialogContent.querySelector(".detail-metrics");
         if (!metrics) return;
@@ -492,6 +552,8 @@
         const crewCards = personCards(crew, crewRole);
 
         const metrics = [
+            detailMetric("RT", "Critics", "—", "rt", true),
+            detailMetric("RT", "Audience", "—", "rt-audience", true),
             detailMetric("★", "TMDB", rating, "tmdb"),
             detailMetric("◷", "Runtime", formatRuntime(runtime)),
             detailMetric("▤", "Seasons", seasonCount),
@@ -527,16 +589,6 @@
                 <section class="detail-intro">
                     <h2 id="media-dialog-title">${escapeHTML(title)}</h2>
                     ${releaseLine ? `<p class="detail-release">${escapeHTML(releaseLine)}</p>` : ""}
-                    <div class="detail-actions" aria-label="Binge actions">
-                        <button class="detail-action detail-action--watchlist" type="button" data-detail-action="watchlist">
-                            <span class="detail-action-icon" aria-hidden="true">+</span>
-                            <span class="detail-action-label">Watchlist</span>
-                        </button>
-                        <button class="detail-action detail-action--watched is-active" type="button" data-detail-action="watched" data-active-label="${kind === "movie" ? "Watched" : "Watching"}">
-                            <span class="detail-action-icon" aria-hidden="true">✓</span>
-                            <span class="detail-action-label">${kind === "movie" ? "Watched" : "Watching"}</span>
-                        </button>
-                    </div>
                     ${details.overview ? `
                         <p class="detail-overview" data-detail-overview>${escapeHTML(details.overview)}</p>
                         ${details.overview.length > 180 ? `<button class="detail-read-more" type="button" data-detail-read-more>Show more <span aria-hidden="true">⌄</span></button>` : ""}
@@ -681,19 +733,6 @@
             return;
         }
 
-        const actionButton = event.target.closest("[data-detail-action]");
-        if (actionButton) {
-            const isActive = actionButton.classList.toggle("is-active");
-            const icon = actionButton.querySelector(".detail-action-icon");
-            const label = actionButton.querySelector(".detail-action-label");
-            if (actionButton.dataset.detailAction === "watchlist") {
-                if (icon) icon.textContent = isActive ? "✓" : "+";
-                if (label) label.textContent = isActive ? "In Watchlist" : "Watchlist";
-            } else {
-                if (icon) icon.textContent = isActive ? "✓" : "+";
-                if (label) label.textContent = isActive ? actionButton.dataset.activeLabel : "Mark Watched";
-            }
-        }
     });
     mediaDialog.addEventListener("click", (event) => {
         if (event.target === mediaDialog) mediaDialog.close();
