@@ -413,7 +413,7 @@ a:hover {
 
     .feature-cards {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 16px;
         max-width: 320px;
     }
 
