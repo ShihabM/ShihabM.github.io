@@ -353,12 +353,36 @@
         }
     }
 
-    const openSearch = () => {
-        lastScrollPosition = window.scrollY;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const applyOpenSearchState = () => {
         document.body.classList.add("search-active");
         searchExperience.setAttribute("aria-hidden", "false");
         window.scrollTo(0, 0);
-        window.setTimeout(() => searchInput.focus(), 80);
+    };
+
+    const openSearch = () => {
+        lastScrollPosition = window.scrollY;
+        if (typeof document.startViewTransition === "function" && !prefersReducedMotion.matches) {
+            const transition = document.startViewTransition(applyOpenSearchState);
+            transition.finished
+                .catch(() => {})
+                .finally(() => searchInput.focus());
+            return;
+        }
+
+        document.body.classList.add("search-fallback-entering");
+        applyOpenSearchState();
+        window.setTimeout(() => {
+            document.body.classList.remove("search-fallback-entering");
+            searchInput.focus();
+        }, prefersReducedMotion.matches ? 0 : 560);
+    };
+
+    const applyClosedSearchState = () => {
+        document.body.classList.remove("search-active");
+        searchExperience.setAttribute("aria-hidden", "true");
+        window.scrollTo(0, lastScrollPosition);
     };
 
     const closeSearch = () => {
@@ -370,9 +394,15 @@
         allResults = [];
         setFilter("all");
         updateInputState();
-        document.body.classList.remove("search-active");
-        searchExperience.setAttribute("aria-hidden", "true");
-        window.scrollTo(0, lastScrollPosition);
+        if (typeof document.startViewTransition === "function" && !prefersReducedMotion.matches) {
+            const transition = document.startViewTransition(applyClosedSearchState);
+            transition.finished
+                .catch(() => {})
+                .finally(() => launchButton.focus({ preventScroll: true }));
+            return;
+        }
+
+        applyClosedSearchState();
         launchButton.focus({ preventScroll: true });
     };
 

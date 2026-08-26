@@ -639,7 +639,7 @@ summary,
     min-height: 72px;
     padding: 0 26px;
     border: 1px solid rgba(255, 255, 255, 0.13);
-    border-radius: 22px;
+    border-radius: 999px;
     background: #1c1c1e;
     color: #a6a6ab;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -647,6 +647,10 @@ summary,
     font-weight: 500;
     text-align: left;
     transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.search-launch {
+    view-transition-name: binge-search-bar;
 }
 
 .search-launch:hover {
@@ -738,8 +742,51 @@ body.search-active .search-experience {
     max-width: 780px;
     min-height: 58px;
     padding: 0 18px;
-    border-radius: 18px;
+    border-radius: 999px;
     box-shadow: none;
+    view-transition-name: binge-search-bar;
+}
+
+::view-transition-group(binge-search-bar) {
+    animation-duration: 560ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(binge-search-bar),
+::view-transition-new(binge-search-bar) {
+    mix-blend-mode: normal;
+}
+
+body.search-fallback-entering .search-form {
+    animation: search-bar-rise 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+body.search-fallback-entering .search-page-body {
+    animation: search-content-in 440ms 120ms ease-out both;
+}
+
+@keyframes search-bar-rise {
+    from {
+        opacity: 0.7;
+        transform: translateY(min(62vh, 620px));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes search-content-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .search-form input {
@@ -1193,7 +1240,7 @@ body.search-active .search-experience {
     .search-launch {
         min-height: 62px;
         padding: 0 20px;
-        border-radius: 18px;
+        border-radius: 999px;
         font-size: 17px;
     }
 
@@ -1206,7 +1253,7 @@ body.search-active .search-experience {
         min-height: 52px;
         gap: 13px;
         padding: 0 15px;
-        border-radius: 15px;
+        border-radius: 999px;
     }
 
     .search-form input {
@@ -1296,5 +1343,12 @@ body.search-active .search-experience {
     .search-exit,
     .media-dialog-close {
         transition: none;
+    }
+
+    ::view-transition-group(binge-search-bar),
+    body.search-fallback-entering .search-form,
+    body.search-fallback-entering .search-page-body {
+        animation-duration: 1ms;
+        animation-delay: 0ms;
     }
 }
