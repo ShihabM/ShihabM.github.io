@@ -30,6 +30,8 @@
     let searchRequest;
     let detailRequest;
     let seasonRequest;
+    let activeDetail;
+    let ratingHydrationVersion = 0;
     let allResults = [];
     let activeFilter = "all";
     let lastScrollPosition = 0;
@@ -366,7 +368,7 @@
         }
     };
 
-    const rottenTomatoesURL = (details, kind, withYear) => {
+    const rottenTomatoesURL = (details, kind, year = "", seasonNumber = 1) => {
         const slug = mediaTitle(details)
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
@@ -378,48 +380,72 @@
             .replaceAll("'", "")
             .replaceAll("-", "_")
             .replace(/[^a-z0-9_]/g, "");
-        const year = mediaDate(details).slice(0, 4);
-        return `https://www.rottentomatoes.com/${kind === "movie" ? "m" : "tv"}/${slug}${withYear && year ? `_${year}` : ""}`;
+        const seasonPath = kind === "tv"
+            ? `/s${String(Math.max(0, Number(seasonNumber) || 0)).padStart(2, "0")}`
+            : "";
+        return `https://www.rottentomatoes.com/${kind === "movie" ? "m" : "tv"}/${slug}${year ? `_${year}` : ""}${seasonPath}`;
+    };
+
+    const rottenTomatoesURLs = (details, kind, seasonNumber) => {
+        const releaseYear = mediaDate(details).slice(0, 4);
+        const years = [releaseYear];
+        if (kind === "movie" && Number(releaseYear)) years.push(String(Number(releaseYear) - 1));
+        years.push("");
+        return [...new Set(years.map((year) => rottenTomatoesURL(details, kind, year, seasonNumber)))];
     };
 
     const parseRottenTomatoesScores = (html) => {
         const documentFragment = new DOMParser().parseFromString(html, "text/html");
         const scorecard = documentFragment.querySelector('script[data-json="mediaScorecard"]');
-        const data = scorecard?.textContent ? JSON.parse(scorecard.textContent) : {};
-        const critics = data.criticsScore?.scorePercent ||
-            (data.criticsScore?.score ? `${data.criticsScore.score}%` : "") ||
-            html.match(/Tomatometer[^0-9%]{0,160}(\d{1,3})%/i)?.[1]?.concat("%") || "";
-        const audience = data.audienceScore?.scorePercent ||
-            (data.audienceScore?.score ? `${data.audienceScore.score}%` : "") ||
-            html.match(/Popcornmeter[^0-9%]{0,160}(\d{1,3})%/i)?.[1]?.concat("%") || "";
+        let data = {};
+        try {
+            data = scorecard?.textContent ? JSON.parse(scorecard.textContent) : {};
+        } catch {
+            data = {};
+        }
+        const percentage = (value) => {
+            const score = String(value ?? "").trim();
+            if (!/^\d{1,3}%?$/.test(score)) return "";
+            return score.endsWith("%") ? score : `${score}%`;
+        };
+        const embeddedScore = (key) => html.match(
+            new RegExp(`"${key}"\\s*:\\s*\\{[^}]*"score"\\s*:\\s*"?(\\d{1,3})"?`, "i")
+        )?.[1] || "";
+        const critics = percentage(data.criticsScore?.scorePercent) ||
+            percentage(data.criticsScore?.score) ||
+            percentage(embeddedScore("criticsScore")) ||
+            percentage(html.match(/Tomatometer[^0-9%]{0,160}(\d{1,3})%/i)?.[1]);
+        const audience = percentage(data.audienceScore?.scorePercent) ||
+            percentage(data.audienceScore?.score) ||
+            percentage(embeddedScore("audienceScore")) ||
+            percentage(html.match(/Popcornmeter[^0-9%]{0,160}(\d{1,3})%/i)?.[1]);
         if (!critics && !audience) throw new Error("Rotten Tomatoes scores were empty");
         return { critics, audience };
     };
 
-    const fetchRottenTomatoesScores = async (details, kind) => {
-        const relayAttempts = [true, false].map(async (withYear) => {
-            const relay = new URL("https://api.allorigins.win/raw");
-            relay.searchParams.set("url", rottenTomatoesURL(details, kind, withYear));
-            return parseRottenTomatoesScores(await getTextWithTimeout(relay));
-        });
-        const reader = `https://r.jina.ai/${rottenTomatoesURL(details, kind, false)}`;
-        const results = await Promise.allSettled([
-            ...relayAttempts,
-            getTextWithTimeout(reader).then(parseRottenTomatoesScores)
-        ]);
-        return results.find((result) => result.status === "fulfilled")?.value || {};
+    const fetchRottenTomatoesScores = async (details, kind, seasonNumber) => {
+        const attempts = rottenTomatoesURLs(details, kind, seasonNumber).map((url) =>
+            getTextWithTimeout(`https://proxy.cors.sh/${url}`, 8000).then(parseRottenTomatoesScores)
+        );
+        try {
+            return await Promise.any(attempts);
+        } catch {
+            return {};
+        }
     };
 
-    const fetchExternalRatingMetrics = (details, kind) => {
+    const fetchExternalRatingMetrics = (details, kind, seasonNumber) => {
         const imdbID = details.external_ids?.imdb_id || details.imdb_id || "";
-        if (!/^tt\d+$/.test(imdbID)) return Promise.resolve([]);
-        const cacheKey = `${kind}:${imdbID}`;
+        const hasIMDbID = /^tt\d+$/.test(imdbID);
+        const cacheKey = `${kind}:${hasIMDbID ? imdbID : details.id}:${kind === "tv" ? seasonNumber : "title"}`;
         if (externalRatingCache.has(cacheKey)) return externalRatingCache.get(cacheKey);
 
         const request = Promise.allSettled([
-            getJSON(new URL(`https://v3-cinemeta.strem.io/meta/${kind === "movie" ? "movie" : "series"}/${imdbID}.json`)),
-            getJSON(wikidataRatingsURL(imdbID)),
-            fetchRottenTomatoesScores(details, kind)
+            hasIMDbID
+                ? getJSON(new URL(`https://v3-cinemeta.strem.io/meta/${kind === "movie" ? "movie" : "series"}/${imdbID}.json`))
+                : Promise.resolve(null),
+            hasIMDbID ? getJSON(wikidataRatingsURL(imdbID)) : Promise.resolve(null),
+            fetchRottenTomatoesScores(details, kind, seasonNumber)
         ]).then(([cinemetaResult, wikidataResult, rottenTomatoesResult]) => {
             const bindings = wikidataResult.status === "fulfilled"
                 ? wikidataResult.value?.results?.bindings || []
@@ -431,6 +457,7 @@
             const rottenTomatoes = rottenTomatoesResult.status === "fulfilled" ? rottenTomatoesResult.value : {};
             const critics = rottenTomatoes.critics || formattedSourceScore(scoreFrom("Q105584", "Q108403393"), "100");
             const audience = rottenTomatoes.audience || formattedSourceScore(scoreFrom("Q105584", "Q131100566"), "100");
+            if (!critics || !audience) externalRatingCache.delete(cacheKey);
             const letterboxd = formattedSourceScore(scoreFrom("Q18709181"), "5");
             const metacritic = formattedSourceScore(scoreFrom("Q150248"), "100");
             const cinemetaRating = cinemetaResult.status === "fulfilled"
@@ -453,9 +480,15 @@
         return request;
     };
 
-    const hydrateExternalRatingMetrics = async (details, kind, request) => {
-        const ratingMetrics = await fetchExternalRatingMetrics(details, kind);
-        if (request.signal.aborted || detailRequest !== request || !ratingMetrics.length) return;
+    const hydrateExternalRatingMetrics = async (details, kind, request, requestedSeason) => {
+        const seasonNumber = kind === "tv"
+            ? (Number.isInteger(requestedSeason) ? requestedSeason : defaultSeasonNumber(details))
+            : null;
+        const hydrationVersion = ++ratingHydrationVersion;
+        const ratingMetrics = await fetchExternalRatingMetrics(details, kind, seasonNumber);
+        const selectedSeason = Number(dialogContent.querySelector("[data-season-select]")?.value);
+        if (request.signal.aborted || detailRequest !== request || hydrationVersion !== ratingHydrationVersion ||
+            (kind === "tv" && selectedSeason !== seasonNumber) || !ratingMetrics.length) return;
         const metrics = dialogContent.querySelector(".detail-metrics");
         if (!metrics) return;
         metrics.querySelectorAll("[data-external-rating]").forEach((metric) => metric.remove());
@@ -748,6 +781,8 @@
     async function openDetails(item) {
         detailRequest?.abort();
         seasonRequest?.abort();
+        activeDetail = null;
+        ratingHydrationVersion += 1;
         const request = new AbortController();
         detailRequest = request;
         const kind = item.media_type === "movie" ? "movie" : "tv";
@@ -766,6 +801,7 @@
                 request.signal
             );
             if (!request.signal.aborted && detailRequest === request) {
+                activeDetail = { details, kind };
                 renderDetail(details, kind);
                 void hydrateExternalRatingMetrics(details, kind, request);
                 if (kind === "tv") hydrateSeasonEpisodes(details, request);
@@ -873,6 +909,9 @@
         if (summary) summary.textContent = episodeCountText(Number(selectedOption?.dataset.episodeCount) || 0);
         if (Number.isInteger(showID) && Number.isInteger(seasonNumber)) {
             void loadSeasonEpisodes(showID, seasonNumber, detailRequest);
+            if (activeDetail?.kind === "tv") {
+                void hydrateExternalRatingMetrics(activeDetail.details, "tv", detailRequest, seasonNumber);
+            }
         }
     });
     mediaDialog.addEventListener("click", (event) => {
@@ -881,6 +920,8 @@
     mediaDialog.addEventListener("close", () => {
         detailRequest?.abort();
         seasonRequest?.abort();
+        activeDetail = null;
+        ratingHydrationVersion += 1;
     });
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && document.body.classList.contains("search-active") && !mediaDialog.open) {
