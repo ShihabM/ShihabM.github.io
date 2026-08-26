@@ -1407,14 +1407,14 @@ body.search-fallback-entering .search-page-body {
 
 .detail-metric-icon {
     display: inline-flex;
-    width: 19px;
-    height: 19px;
+    width: 18px;
+    height: 18px;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #d6e6ee;
-    font-size: 12px;
+    flex: 0 0 18px;
+    color: rgba(235, 242, 246, 0.48);
+    font-size: 17px;
+    line-height: 1;
 }
 
 .detail-metric-icon--rt {
@@ -1454,6 +1454,22 @@ body.search-fallback-entering .search-page-body {
     color: #06120a;
     font-size: 8px;
     font-weight: 900;
+}
+
+.detail-metric-icon--image {
+    width: 18px;
+    height: 18px;
+    flex-basis: 18px;
+    overflow: visible;
+    border-radius: 0;
+    background: transparent;
+}
+
+.detail-metric-icon--image img {
+    display: block;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
 }
 
 .detail-metric strong {

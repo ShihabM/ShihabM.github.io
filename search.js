@@ -324,9 +324,11 @@
         return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(value, unit);
     };
 
-    const detailMetric = (symbol, label, value, tone = "", isExternal = false) => value ? `
+    const metricIconPath = (name) => `/assets/metrics/${name}.png`;
+
+    const detailMetric = (symbol, label, value, tone = "", isExternal = false, iconPath = "") => value ? `
         <div class="detail-metric"${isExternal ? " data-external-rating" : ""}>
-            <div class="detail-metric-label"><span class="detail-metric-icon${tone ? ` detail-metric-icon--${escapeHTML(tone)}` : ""}" aria-hidden="true">${escapeHTML(symbol)}</span>${escapeHTML(label)}</div>
+            <div class="detail-metric-label"><span class="detail-metric-icon${tone ? ` detail-metric-icon--${escapeHTML(tone)}` : ""}${iconPath ? " detail-metric-icon--image" : ""}" aria-hidden="true">${iconPath ? `<img src="${escapeHTML(iconPath)}" alt="">` : escapeHTML(symbol)}</span>${escapeHTML(label)}</div>
             <strong>${escapeHTML(value)}</strong>
         </div>` : "";
 
@@ -420,7 +422,9 @@
             percentage(embeddedScore("audienceScore")) ||
             percentage(html.match(/Popcornmeter[^0-9%]{0,160}(\d{1,3})%/i)?.[1]);
         if (!critics && !audience) throw new Error("Rotten Tomatoes scores were empty");
-        return { critics, audience };
+        const criticsCertified = data.criticsScore?.certified === true ||
+            /"criticsScore"\s*:\s*\{[^}]*"certified"\s*:\s*true/i.test(html);
+        return { critics, audience, criticsCertified };
     };
 
     const fetchRottenTomatoesScores = async (details, kind, seasonNumber) => {
@@ -458,6 +462,18 @@
             const critics = rottenTomatoes.critics || formattedSourceScore(scoreFrom("Q105584", "Q108403393"), "100");
             const audience = rottenTomatoes.audience || formattedSourceScore(scoreFrom("Q105584", "Q131100566"), "100");
             if (!critics || !audience) externalRatingCache.delete(cacheKey);
+            const criticScore = Number.parseInt(critics, 10);
+            const audienceScore = Number.parseInt(audience, 10);
+            const criticIcon = criticScore < 60
+                ? metricIconPath("rt-rotten")
+                : rottenTomatoes.criticsCertified
+                    ? metricIconPath("rt-certified")
+                    : metricIconPath("rt-critics");
+            const audienceIcon = audienceScore < 60
+                ? metricIconPath("rt-audience-negative")
+                : audienceScore > 90
+                    ? metricIconPath("rt-audience-hot")
+                    : metricIconPath("rt-audience");
             const letterboxd = formattedSourceScore(scoreFrom("Q18709181"), "5");
             const metacritic = formattedSourceScore(scoreFrom("Q150248"), "100");
             const cinemetaRating = cinemetaResult.status === "fulfilled"
@@ -468,11 +484,11 @@
                 : formattedSourceScore(scoreFrom("Q37312"), "10");
 
             return [
-                { symbol: "RT", label: "Critics", value: critics || "—", tone: "rt" },
-                { symbol: "RT", label: "Audience", value: audience || "—", tone: "rt-audience" },
-                { symbol: "LB", label: "Letterboxd", value: letterboxd, tone: "letterboxd" },
-                { symbol: "IMDb", label: "IMDb", value: imdb, tone: "imdb" },
-                { symbol: "MC", label: "Metacritic", value: metacritic, tone: "metacritic" }
+                { symbol: "", label: "Critics", value: critics || "—", tone: "rt", icon: criticIcon },
+                { symbol: "", label: "Audience", value: audience || "—", tone: "rt-audience", icon: audienceIcon },
+                { symbol: "", label: "Letterboxd", value: letterboxd, tone: "letterboxd", icon: metricIconPath("letterboxd") },
+                { symbol: "", label: "IMDb", value: imdb, tone: "imdb", icon: metricIconPath("imdb") },
+                { symbol: "", label: "Metacritic", value: metacritic, tone: "metacritic", icon: metricIconPath("metacritic") }
             ].filter((metric) => metric.value);
         });
 
@@ -493,7 +509,7 @@
         if (!metrics) return;
         metrics.querySelectorAll("[data-external-rating]").forEach((metric) => metric.remove());
         metrics.insertAdjacentHTML("afterbegin", ratingMetrics.map((metric) =>
-            detailMetric(metric.symbol, metric.label, metric.value, metric.tone, true)
+            detailMetric(metric.symbol, metric.label, metric.value, metric.tone, true, metric.icon)
         ).join(""));
     };
 
@@ -711,8 +727,8 @@
         const crewCards = personCards(crew, crewRole);
 
         const metrics = [
-            detailMetric("RT", "Critics", "—", "rt", true),
-            detailMetric("RT", "Audience", "—", "rt-audience", true),
+            detailMetric("", "Critics", "—", "rt", true, metricIconPath("rt-critics")),
+            detailMetric("", "Audience", "—", "rt-audience", true, metricIconPath("rt-audience")),
             detailMetric("★", "TMDB", rating, "tmdb"),
             detailMetric("◷", "Runtime", formatRuntime(runtime)),
             detailMetric("▤", "Seasons", seasonCount),
