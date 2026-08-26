@@ -184,49 +184,53 @@ a:hover {
 }
 
 .feature-showcase-inner {
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(52px, 6vw, 96px);
     width: 100%;
-    max-width: 1180px;
+    max-width: 1440px;
     margin: 0 auto;
 }
 
-.feature-row {
+.feature-cards {
     display: grid;
-    grid-template-columns: minmax(260px, 430px) minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(56px, 8vw, 128px);
-}
-
-.feature-row + .feature-row {
-    margin-top: clamp(112px, 14vw, 200px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: clamp(14px, 1.8vw, 26px);
 }
 
 .feature-image-frame {
     width: 100%;
-    padding: clamp(10px, 1.2vw, 16px);
+    padding: clamp(7px, 0.8vw, 11px);
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: clamp(28px, 3.2vw, 42px);
+    border-radius: clamp(20px, 2vw, 30px);
     background: #191919;
-    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+    box-shadow: 0 20px 52px rgba(0, 0, 0, 0.34);
 }
 
 .feature-image-frame img {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: clamp(20px, 2.4vw, 32px);
+    border-radius: clamp(14px, 1.5vw, 22px);
 }
 
 .feature-copy {
-    max-width: 520px;
+    max-width: 360px;
 }
 
 .feature-copy p {
     color: #b8b8b8;
-    font-size: clamp(24px, 3.1vw, 42px);
+    font-size: clamp(19px, 1.65vw, 26px);
     font-weight: 500;
-    line-height: 1.28;
-    letter-spacing: -0.025em;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+}
+
+.feature-copy p + p {
+    margin-top: 28px;
 }
 
 .footer-copyright {
@@ -379,24 +383,42 @@ a:hover {
     }
 }
 
+@media (max-width: 1000px) {
+    .feature-showcase-inner {
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 56px;
+    }
+
+    .feature-copy {
+        max-width: 720px;
+    }
+
+    .feature-cards {
+        width: 100%;
+        max-width: 860px;
+    }
+}
+
 @media (max-width: 720px) {
     .feature-showcase {
         padding-top: 88px;
         padding-bottom: 104px;
     }
 
-    .feature-row {
+    .feature-showcase-inner {
         grid-template-columns: 1fr;
-        align-items: start;
-        gap: 34px;
+        gap: 48px;
     }
 
-    .feature-row + .feature-row {
-        margin-top: 112px;
+    .feature-cards {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        max-width: 320px;
     }
 
     .feature-image-frame {
-        width: min(100%, 430px);
+        width: 100%;
     }
 
     .feature-copy {
@@ -404,7 +426,11 @@ a:hover {
     }
 
     .feature-copy p {
-        font-size: clamp(24px, 8vw, 34px);
+        font-size: 20px;
+    }
+
+    .feature-copy p + p {
+        margin-top: 22px;
     }
 }
 
