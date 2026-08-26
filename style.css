@@ -451,7 +451,8 @@ a:hover {
     }
 
     .hero h1,
-    .notification-copy h2 {
+    .notification-copy h2,
+    .search-invitation h2 {
         font-size: 40px;
     }
 
@@ -606,7 +607,6 @@ summary,
 
 .search-invitation-eyebrow,
 .search-kicker {
-    color: #b9a5ff;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.2;
@@ -614,12 +614,20 @@ summary,
     text-transform: uppercase;
 }
 
+.search-invitation-eyebrow {
+    color: #72d6f7;
+}
+
+.search-kicker {
+    color: #b9a5ff;
+}
+
 .search-invitation h2 {
     margin: 16px 0 42px;
-    font-size: clamp(40px, 5vw, 64px);
+    font-size: 56px;
     font-weight: 700;
     line-height: 1;
-    letter-spacing: -0.04em;
+    letter-spacing: normal;
 }
 
 .search-launch,
