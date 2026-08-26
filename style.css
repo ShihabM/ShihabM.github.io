@@ -7,14 +7,11 @@
 
 html {
     background-color: #101010;
-    background-image:
-        radial-gradient(ellipse at 12% 0%, rgba(80, 216, 242, 0.42) 0%, rgba(80, 216, 242, 0) 46%),
-        radial-gradient(ellipse at 68% 0%, rgba(151, 126, 235, 0.3) 0%, rgba(151, 126, 235, 0) 48%),
-        linear-gradient(to bottom, #f9f9f9 0%, #f9f9f9 50%, #101010 50%, #101010 100%);
 }
 
 body {
-    background: #f9f9f9;
+    background-color: #101010;
+    background-image: linear-gradient(#f9f9f9, #f9f9f9);
     color: #111;
     overflow-x: hidden;
     min-height: 100vh;
@@ -287,6 +284,11 @@ a:hover {
 }
 
 @media (max-width: 900px) {
+    .navbar {
+        background: #101010;
+        color: #f9f9f9;
+    }
+
     .hero {
         flex-direction: column;
         text-align: center;
