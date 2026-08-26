@@ -231,7 +231,7 @@ a:hover {
     letter-spacing: -0.02em;
 }
 
-.feature-copy p + p {
+.feature-copy p:not(.feature-eyebrow) + p {
     margin-top: 28px;
 }
 
@@ -257,11 +257,13 @@ a:hover {
     max-width: 420px;
 }
 
+.feature-copy .feature-eyebrow,
 .notification-eyebrow {
     margin-bottom: 18px;
     color: #e84d70;
     font-size: 14px;
     font-weight: 700;
+    line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
@@ -508,7 +510,7 @@ a:hover {
         width: min(100%, 540px);
     }
 
-    .feature-copy p + p {
+    .feature-copy p:not(.feature-eyebrow) + p {
         margin-top: 22px;
     }
 
