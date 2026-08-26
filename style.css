@@ -1386,7 +1386,8 @@ body.search-fallback-entering .search-page-body {
 
 .detail-metrics::-webkit-scrollbar,
 .detail-providers::-webkit-scrollbar,
-.detail-people::-webkit-scrollbar {
+.detail-people::-webkit-scrollbar,
+.detail-episodes::-webkit-scrollbar {
     display: none;
 }
 
@@ -1494,6 +1495,153 @@ body.search-fallback-entering .search-page-body {
     color: #68686d;
     font-size: 14px;
     line-height: 1.3;
+}
+
+.detail-season-heading {
+    align-items: flex-start;
+}
+
+.detail-season-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.detail-season-picker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.detail-season-picker select {
+    min-height: 34px;
+    padding: 0 34px 0 13px;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid rgba(114, 214, 247, 0.22);
+    border-radius: 999px;
+    outline: 0;
+    background: rgba(10, 41, 57, 0.72);
+    color: #e8faff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 680;
+}
+
+.detail-season-picker select:focus-visible {
+    outline: 3px solid #72d6f7;
+    outline-offset: 3px;
+}
+
+.detail-season-picker > span:last-child {
+    position: absolute;
+    right: 12px;
+    color: rgba(232, 250, 255, 0.6);
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.detail-episodes {
+    display: flex;
+    gap: 14px;
+    margin-right: -34px;
+    padding: 2px 34px 10px 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+}
+
+.detail-episode {
+    flex: 0 0 270px;
+    min-width: 0;
+}
+
+.detail-episode-art {
+    position: relative;
+    aspect-ratio: 270 / 171;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: #19191b;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+}
+
+.detail-episode-art::after {
+    content: "";
+    position: absolute;
+    inset: 36% 0 0;
+    background: linear-gradient(to bottom, transparent, rgba(2, 3, 4, 0.94));
+    pointer-events: none;
+}
+
+.detail-episode-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detail-episode-copy {
+    position: absolute;
+    z-index: 1;
+    right: 12px;
+    bottom: 11px;
+    left: 12px;
+}
+
+.detail-episode-copy strong,
+.detail-episode-copy span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.detail-episode-copy strong {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+.detail-episode-copy span {
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.56);
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+.detail-episode-fallback,
+.detail-episode-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8e8e93;
+    font-size: 14px;
+    text-align: center;
+}
+
+.detail-episode-fallback {
+    width: 100%;
+    height: 100%;
+}
+
+.detail-episode-empty {
+    min-height: 120px;
+    flex: 1 0 100%;
+    padding-right: 34px;
+}
+
+.detail-episode.is-loading .detail-episode-art {
+    border: 0;
+    background: linear-gradient(100deg, #1c1c1e 25%, #29292c 44%, #1c1c1e 63%);
+    background-size: 300% 100%;
+    animation: search-shimmer 1.35s ease-in-out infinite;
+}
+
+.detail-episode.is-loading .detail-episode-art::after {
+    display: none;
 }
 
 .detail-providers,
@@ -1758,9 +1906,14 @@ body.search-fallback-entering .search-page-body {
     }
 
     .detail-providers,
-    .detail-people {
+    .detail-people,
+    .detail-episodes {
         margin-right: -20px;
         padding-right: 20px;
+    }
+
+    .detail-episode {
+        flex-basis: 240px;
     }
 
     .detail-about-row {
@@ -1773,6 +1926,7 @@ body.search-fallback-entering .search-page-body {
 
 @media (prefers-reduced-motion: reduce) {
     .search-result-card.is-skeleton,
+    .detail-episode.is-loading .detail-episode-art,
     .media-dialog[open] {
         animation: none;
     }

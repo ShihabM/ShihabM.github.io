@@ -29,10 +29,12 @@
     let searchTimer;
     let searchRequest;
     let detailRequest;
+    let seasonRequest;
     let allResults = [];
     let activeFilter = "all";
     let lastScrollPosition = 0;
     const externalRatingCache = new Map();
+    const seasonCache = new Map();
 
     const escapeHTML = (value = "") => String(value)
         .replaceAll("&", "&amp;")
@@ -249,6 +251,17 @@
         return `${hours}h${remainder ? ` ${remainder}m` : ""}`;
     };
 
+    const formatShortDate = (dateValue) => {
+        if (!dateValue) return "";
+        const [year, month, day] = dateValue.slice(0, 10).split("-").map(Number);
+        if (!year || !month || !day) return "";
+        return new Intl.DateTimeFormat("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }).format(new Date(year, month - 1, day));
+    };
+
     const formatCompactCurrency = (value) => {
         const amount = Number(value);
         if (!amount) return "";
@@ -451,6 +464,119 @@
         ).join(""));
     };
 
+    const detailSeasons = (details) => (details.seasons || [])
+        .filter((season) => Number.isInteger(season.season_number) && Number(season.episode_count) > 0)
+        .sort((first, second) => first.season_number - second.season_number);
+
+    const defaultSeasonNumber = (details) => {
+        const seasons = detailSeasons(details);
+        if (!seasons.length) return 0;
+        const regularSeasons = seasons.filter((season) => season.season_number > 0);
+        const selectableSeasons = regularSeasons.length ? regularSeasons : seasons;
+        const today = new Date().toISOString().slice(0, 10);
+        const airedSeasons = selectableSeasons.filter((season) => !season.air_date || season.air_date <= today);
+        const candidates = airedSeasons.length ? airedSeasons : selectableSeasons;
+        return candidates[candidates.length - 1].season_number;
+    };
+
+    const episodeCountText = (count) => `${count} ${count === 1 ? "episode" : "episodes"}`;
+
+    const episodeLoadingCards = () => Array.from({ length: 3 }, () => `
+        <div class="detail-episode is-loading" aria-hidden="true">
+            <div class="detail-episode-art"></div>
+        </div>`).join("");
+
+    const seasonSection = (details) => {
+        const seasons = detailSeasons(details);
+        if (!seasons.length) return "";
+        const selectedSeason = defaultSeasonNumber(details);
+        const selected = seasons.find((season) => season.season_number === selectedSeason) || seasons[0];
+        const options = seasons.map((season) => {
+            const label = season.season_number === 0 ? "Specials" : `Season ${season.season_number}`;
+            return `<option value="${season.season_number}" data-episode-count="${season.episode_count}"${season.season_number === selected.season_number ? " selected" : ""}>${escapeHTML(label)}</option>`;
+        }).join("");
+        const fallbackPath = details.backdrop_path || details.poster_path || "";
+        return `
+            <section class="detail-section detail-section--episodes" data-episodes-section data-fallback-path="${escapeHTML(fallbackPath)}">
+                <div class="detail-section-heading detail-season-heading">
+                    <div>
+                        <div class="detail-season-title-row">
+                            <h3>Episodes</h3>
+                            <label class="detail-season-picker">
+                                <span class="visually-hidden">Choose a season</span>
+                                <select data-season-select data-show-id="${details.id}" aria-label="Choose a season">${options}</select>
+                                <span aria-hidden="true">↕</span>
+                            </label>
+                        </div>
+                        <p data-season-summary>${escapeHTML(episodeCountText(Number(selected.episode_count) || 0))}</p>
+                    </div>
+                </div>
+                <div class="detail-episodes" data-episode-carousel aria-live="polite">${episodeLoadingCards()}</div>
+            </section>`;
+    };
+
+    const episodeCards = (episodes, seasonNumber, fallbackPath) => episodes.map((episode, index) => {
+        const episodeNumber = Number(episode.episode_number) || index + 1;
+        const name = episode.name || `Episode ${episodeNumber}`;
+        const image = imageURL(episode.still_path || fallbackPath, "w500");
+        const metadata = [
+            `S${seasonNumber}, E${episodeNumber}`,
+            formatShortDate(episode.air_date),
+            formatRuntime(episode.runtime)
+        ].filter(Boolean).join(" • ");
+        return `<article class="detail-episode"${episode.overview ? ` title="${escapeHTML(episode.overview)}"` : ""}>
+            <div class="detail-episode-art">
+                ${image
+                    ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(name)} still" loading="lazy" decoding="async">`
+                    : `<span class="detail-episode-fallback">${escapeHTML(`Episode ${episodeNumber}`)}</span>`}
+                <div class="detail-episode-copy">
+                    <strong>${escapeHTML(name)}</strong>
+                    <span>${escapeHTML(metadata)}</span>
+                </div>
+            </div>
+        </article>`;
+    }).join("");
+
+    const loadSeasonEpisodes = async (showID, seasonNumber, request) => {
+        seasonRequest?.abort();
+        const controller = new AbortController();
+        seasonRequest = controller;
+        const section = dialogContent.querySelector("[data-episodes-section]");
+        const carousel = section?.querySelector("[data-episode-carousel]");
+        const summary = section?.querySelector("[data-season-summary]");
+        if (!section || !carousel || !summary) return;
+        carousel.innerHTML = episodeLoadingCards();
+
+        try {
+            const cacheKey = `${showID}:${seasonNumber}`;
+            let season = seasonCache.get(cacheKey);
+            if (!season) {
+                season = await getJSON(apiURL(`/tv/${showID}/season/${seasonNumber}`), controller.signal);
+                seasonCache.set(cacheKey, season);
+            }
+            if (controller.signal.aborted || seasonRequest !== controller || request.signal.aborted || detailRequest !== request) return;
+            const episodes = (season.episodes || []).slice().sort((first, second) =>
+                (Number(first.episode_number) || 0) - (Number(second.episode_number) || 0)
+            );
+            summary.textContent = episodeCountText(episodes.length);
+            carousel.innerHTML = episodes.length
+                ? episodeCards(episodes, seasonNumber, section.dataset.fallbackPath || "")
+                : `<p class="detail-episode-empty">No episodes are available for this season yet.</p>`;
+        } catch (error) {
+            if (error?.name === "AbortError") return;
+            if (seasonRequest === controller && detailRequest === request) {
+                carousel.innerHTML = `<p class="detail-episode-empty">Episodes couldn’t be loaded. Try another season.</p>`;
+            }
+        }
+    };
+
+    const hydrateSeasonEpisodes = (details, request) => {
+        const select = dialogContent.querySelector("[data-season-select]");
+        const seasonNumber = Number(select?.value);
+        if (!select || !Number.isInteger(seasonNumber)) return;
+        void loadSeasonEpisodes(details.id, seasonNumber, request);
+    };
+
     const detailAboutRow = (label, value, tone = "neutral") => value ? `
         <div class="detail-about-row">
             <span class="detail-about-dot detail-about-dot--${escapeHTML(tone)}" aria-hidden="true"></span>
@@ -595,6 +721,7 @@
                     ` : ""}
                 </section>
                 <div class="detail-metrics" aria-label="Title metrics">${metrics}</div>
+                ${kind === "tv" ? seasonSection(details) : ""}
                 ${providerCards ? `
                     <section class="detail-section">
                         <div class="detail-section-heading"><div><h3>Where to Watch</h3><p>${escapeHTML(providerType)}</p></div></div>
@@ -620,6 +747,7 @@
 
     async function openDetails(item) {
         detailRequest?.abort();
+        seasonRequest?.abort();
         const request = new AbortController();
         detailRequest = request;
         const kind = item.media_type === "movie" ? "movie" : "tv";
@@ -640,6 +768,7 @@
             if (!request.signal.aborted && detailRequest === request) {
                 renderDetail(details, kind);
                 void hydrateExternalRatingMetrics(details, kind, request);
+                if (kind === "tv") hydrateSeasonEpisodes(details, request);
             }
         } catch (error) {
             if (error?.name === "AbortError") return;
@@ -734,10 +863,25 @@
         }
 
     });
+    dialogContent.addEventListener("change", (event) => {
+        const select = event.target.closest("[data-season-select]");
+        if (!select || !detailRequest) return;
+        const showID = Number(select.dataset.showId);
+        const seasonNumber = Number(select.value);
+        const selectedOption = select.selectedOptions[0];
+        const summary = dialogContent.querySelector("[data-season-summary]");
+        if (summary) summary.textContent = episodeCountText(Number(selectedOption?.dataset.episodeCount) || 0);
+        if (Number.isInteger(showID) && Number.isInteger(seasonNumber)) {
+            void loadSeasonEpisodes(showID, seasonNumber, detailRequest);
+        }
+    });
     mediaDialog.addEventListener("click", (event) => {
         if (event.target === mediaDialog) mediaDialog.close();
     });
-    mediaDialog.addEventListener("close", () => detailRequest?.abort());
+    mediaDialog.addEventListener("close", () => {
+        detailRequest?.abort();
+        seasonRequest?.abort();
+    });
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && document.body.classList.contains("search-active") && !mediaDialog.open) {
             closeSearch();
