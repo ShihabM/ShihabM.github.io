@@ -619,7 +619,7 @@ summary,
 }
 
 .search-kicker {
-    color: #b9a5ff;
+    color: #72d6f7;
 }
 
 .search-invitation h2 {
@@ -638,7 +638,7 @@ summary,
     width: 100%;
     min-height: 72px;
     padding: 0 26px;
-    border: 1px solid rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(114, 214, 247, 0.22);
     border-radius: 999px;
     background: #1c1c1e;
     color: #a6a6ab;
@@ -654,7 +654,7 @@ summary,
 }
 
 .search-launch:hover {
-    border-color: rgba(185, 165, 255, 0.6);
+    border-color: rgba(114, 214, 247, 0.68);
     background: #242426;
     transform: translateY(-2px);
 }
@@ -666,7 +666,7 @@ summary,
 .search-clear:focus-visible,
 .media-dialog-close:focus-visible,
 .search-result-card:focus-visible {
-    outline: 3px solid #9a7cff;
+    outline: 3px solid #72d6f7;
     outline-offset: 3px;
 }
 
@@ -882,8 +882,8 @@ body.search-fallback-entering .search-page-body {
     display: inline-flex;
     gap: 4px;
     padding: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 14px;
+    border: 1px solid rgba(114, 214, 247, 0.18);
+    border-radius: 999px;
     background: #1c1c1e;
 }
 
@@ -891,7 +891,7 @@ body.search-fallback-entering .search-page-body {
     min-height: 38px;
     padding: 0 16px;
     border: 0;
-    border-radius: 10px;
+    border-radius: 999px;
     background: transparent;
     color: #8e8e93;
     font-size: 14px;
@@ -904,8 +904,8 @@ body.search-fallback-entering .search-page-body {
 }
 
 .search-filter.is-active {
-    background: #3a3a3c;
-    color: #fff;
+    background: rgba(114, 214, 247, 0.2);
+    color: #e8faff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
 }
 
@@ -966,7 +966,7 @@ body.search-fallback-entering .search-page-body {
 
 .search-result-card:hover {
     z-index: 2;
-    border-color: rgba(185, 165, 255, 0.54);
+    border-color: rgba(114, 214, 247, 0.58);
     box-shadow: 0 24px 44px rgba(0, 0, 0, 0.42);
     transform: translateY(-5px) scale(1.012);
 }
@@ -1019,14 +1019,6 @@ body.search-fallback-entering .search-page-body {
 @keyframes search-shimmer {
     from { background-position: 100% 0; }
     to { background-position: 0 0; }
-}
-
-.tmdb-attribution {
-    margin: 56px auto 0;
-    color: #55555a;
-    font-size: 11px;
-    line-height: 1.4;
-    text-align: center;
 }
 
 .media-dialog {
@@ -1120,7 +1112,7 @@ body.search-fallback-entering .search-page-body {
 }
 
 .detail-type {
-    color: #b9a5ff;
+    color: #72d6f7;
     font-size: 12px;
     font-weight: 750;
     letter-spacing: 0.09em;
