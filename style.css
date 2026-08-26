@@ -653,6 +653,17 @@ summary,
     view-transition-name: binge-search-bar;
 }
 
+.search-launch,
+.search-clear:not(:disabled),
+.search-exit,
+.search-filter,
+.search-result-card,
+.media-dialog-close,
+.detail-read-more,
+.detail-season-picker select {
+    cursor: pointer;
+}
+
 .search-launch:hover {
     border-color: rgba(114, 214, 247, 0.68);
     background: #242426;
