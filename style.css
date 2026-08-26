@@ -260,12 +260,19 @@ a:hover {
 .feature-copy .feature-eyebrow,
 .notification-eyebrow {
     margin-bottom: 18px;
-    color: #e84d70;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+}
+
+.feature-copy .feature-eyebrow {
+    color: #b9a5ff;
+}
+
+.notification-eyebrow {
+    color: #e84d70;
 }
 
 .notification-copy h2 {
