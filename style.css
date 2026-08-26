@@ -197,7 +197,7 @@ a:hover {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: start;
-    gap: clamp(14px, 1.8vw, 26px);
+    gap: clamp(18px, 2vw, 32px);
     width: 100%;
     max-width: 760px;
 }
