@@ -18,6 +18,17 @@ body {
     isolation: isolate;
 }
 
+.legal-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.legal-page .content-container {
+    flex: 1;
+}
+
 body::before,
 body::after {
     content: "";
