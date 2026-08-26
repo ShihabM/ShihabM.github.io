@@ -411,8 +411,7 @@
         ].join("");
 
         dialogContent.innerHTML = `
-            <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details">&times;</button>
-            <span class="media-dialog-more" aria-hidden="true">•••</span>
+            <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details"><span class="xmark-icon" aria-hidden="true"></span></button>
             <div class="detail-visual"${backdrop ? ` style="background-image: url('${escapeHTML(backdrop)}')"` : ""}>
                 <div class="detail-poster-wrap">
                     ${poster
@@ -473,7 +472,7 @@
             : "credits,content_ratings,watch/providers,external_ids";
 
         dialogContent.innerHTML = `
-            <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details">&times;</button>
+            <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details"><span class="xmark-icon" aria-hidden="true"></span></button>
             <div class="detail-loading" role="status">Loading ${escapeHTML(mediaTitle(item))}…</div>`;
         if (!mediaDialog.open) mediaDialog.showModal();
 
@@ -486,7 +485,7 @@
         } catch (error) {
             if (error?.name === "AbortError") return;
             dialogContent.innerHTML = `
-                <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details">&times;</button>
+                <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details"><span class="xmark-icon" aria-hidden="true"></span></button>
                 <div class="detail-loading" role="alert">Those details couldn’t be loaded. Please try again.</div>`;
         }
     }
