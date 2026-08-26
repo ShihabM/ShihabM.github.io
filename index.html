@@ -5,10 +5,24 @@
     <meta charset="UTF-8">
     <title>Binge - Movies and Shows</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your movies and shows, keep up with new episodes, and find your next watch with Binge.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Binge - Movies and Shows">
+    <meta property="og:description" content="Your movies and shows, in your pocket.">
+    <meta property="og:url" content="https://binge.movie/">
+    <meta property="og:image" content="https://binge.movie/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Binge - Your movies and shows, in your pocket.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Binge - Movies and Shows">
+    <meta name="twitter:description" content="Your movies and shows, in your pocket.">
+    <meta name="twitter:image" content="https://binge.movie/og.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=f683aeb">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=f683aeb">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png?v=f683aeb">
-    <link rel="stylesheet" href="style.css?v=49">
+    <link rel="stylesheet" href="style.css?v=50">
+    <script src="search.js?v=1" defer></script>
 </head>
 
 <body>
@@ -82,6 +96,17 @@
         </div>
     </section>
 
+    <section class="search-invitation" aria-labelledby="search-invitation-heading">
+        <div class="search-invitation-inner">
+            <p class="search-invitation-eyebrow">Explore Binge</p>
+            <h2 id="search-invitation-heading">Find your next watch.</h2>
+            <button class="search-launch" id="search-launch" type="button" aria-label="Search movies and shows">
+                <span class="search-icon" aria-hidden="true"></span>
+                <span>Search movies and shows</span>
+            </button>
+        </div>
+    </section>
+
     <footer class="site-footer">
         <p class="footer-copyright">&copy; 2026 Shihab Mehboob</p>
         <nav class="footer-nav" aria-label="Footer navigation">
@@ -104,6 +129,43 @@
             </a>
         </nav>
     </footer>
+
+    <main class="search-experience" id="search-experience" aria-hidden="true">
+        <header class="search-page-header">
+            <form class="search-form" id="search-form" role="search">
+                <span class="search-icon" aria-hidden="true"></span>
+                <label class="visually-hidden" for="movie-search">Search movies and shows</label>
+                <input id="movie-search" name="query" type="search" inputmode="search" autocomplete="off" placeholder="Search movies and shows" enterkeyhint="search">
+                <button class="search-clear" id="search-clear" type="button" aria-label="Clear search" disabled>&times;</button>
+            </form>
+            <button class="search-exit" id="search-exit" type="button" aria-label="Close search">&times;</button>
+        </header>
+
+        <div class="search-page-body">
+            <div class="search-heading-row">
+                <div>
+                    <p class="search-kicker">Binge search</p>
+                    <h1 id="search-results-title">Movies &amp; Shows</h1>
+                </div>
+                <div class="search-filters" role="group" aria-label="Filter search results">
+                    <button class="search-filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+                    <button class="search-filter" type="button" data-filter="movie" aria-pressed="false">Movies</button>
+                    <button class="search-filter" type="button" data-filter="tv" aria-pressed="false">Shows</button>
+                </div>
+            </div>
+
+            <div class="search-status" id="search-status" aria-live="polite">
+                <span class="search-status-icon" aria-hidden="true"></span>
+                <p>Search for a movie or show to see it here.</p>
+            </div>
+            <div class="search-results" id="search-results" aria-labelledby="search-results-title"></div>
+            <p class="tmdb-attribution">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+        </div>
+    </main>
+
+    <dialog class="media-dialog" id="media-dialog" aria-label="Movie or show details">
+        <div class="media-dialog-card" id="media-dialog-content"></div>
+    </dialog>
 
 </body>
 
