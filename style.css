@@ -1972,3 +1972,22 @@ body.search-fallback-entering .search-page-body {
         animation-delay: 0ms;
     }
 }
+
+/* Keep the pointer visible over nested icons, labels, and poster artwork too. */
+.search-launch,
+.search-launch *,
+.search-clear:not(:disabled),
+.search-clear:not(:disabled) *,
+.search-exit,
+.search-exit *,
+.search-filter,
+.search-filter *,
+.search-result-card,
+.search-result-card *,
+.media-dialog-close,
+.media-dialog-close *,
+.detail-read-more,
+.detail-read-more *,
+.detail-season-picker select {
+    cursor: pointer !important;
+}
