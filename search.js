@@ -267,10 +267,38 @@
         }
     };
 
-    const detailFact = (label, value) => value ? `
-        <div class="detail-fact">
-            <span class="detail-fact-label">${escapeHTML(label)}</span>
-            <span class="detail-fact-value">${escapeHTML(value)}</span>
+    const relativeDate = (dateValue) => {
+        if (!dateValue) return "";
+        const date = new Date(`${dateValue.slice(0, 10)}T12:00:00`);
+        if (Number.isNaN(date.getTime())) return "";
+        const differenceInDays = Math.round((date.getTime() - Date.now()) / 86400000);
+        const absoluteDays = Math.abs(differenceInDays);
+        let value = differenceInDays;
+        let unit = "day";
+        if (absoluteDays >= 365) {
+            value = Math.round(differenceInDays / 365);
+            unit = "year";
+        } else if (absoluteDays >= 30) {
+            value = Math.round(differenceInDays / 30);
+            unit = "month";
+        } else if (absoluteDays >= 7) {
+            value = Math.round(differenceInDays / 7);
+            unit = "week";
+        }
+        return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(value, unit);
+    };
+
+    const detailMetric = (symbol, label, value) => value ? `
+        <div class="detail-metric">
+            <div class="detail-metric-label"><span aria-hidden="true">${escapeHTML(symbol)}</span>${escapeHTML(label)}</div>
+            <strong>${escapeHTML(value)}</strong>
+        </div>` : "";
+
+    const detailAboutRow = (label, value, tone = "neutral") => value ? `
+        <div class="detail-about-row">
+            <span class="detail-about-dot detail-about-dot--${escapeHTML(tone)}" aria-hidden="true"></span>
+            <span class="detail-about-label">${escapeHTML(label)}</span>
+            <span class="detail-about-value">${escapeHTML(value)}</span>
         </div>` : "";
 
     const renderDetail = (details, kind) => {
@@ -282,23 +310,80 @@
         const director = kind === "movie"
             ? (details.credits?.crew || []).filter((person) => person.job === "Director").slice(0, 3).map((person) => person.name).join(", ")
             : (details.created_by || []).slice(0, 3).map((person) => person.name).join(", ");
-        const cast = (details.credits?.cast || []).slice(0, 5).map((person) => person.name).join(", ");
-        const providers = details["watch/providers"]?.results?.US?.flatrate || [];
-        const providerNames = [...new Set(providers.slice(0, 5).map((provider) => provider.provider_name))].join(", ");
-        const genres = (details.genres || []).map((genre) => genre.name).join(" · ");
+        const cast = (details.credits?.cast || []).slice(0, 10);
+        const providerRegion = details["watch/providers"]?.results?.US || {};
+        const providerSource = providerRegion.flatrate?.length
+            ? providerRegion.flatrate
+            : providerRegion.buy?.length
+                ? providerRegion.buy
+                : providerRegion.rent || [];
+        const providerType = providerRegion.flatrate?.length ? "Streaming" : providerRegion.buy?.length ? "Available to buy" : "Available to rent";
+        const providers = [...new Map(providerSource.map((provider) => [provider.provider_id, provider])).values()].slice(0, 8);
+        const genres = (details.genres || []).map((genre) => genre.name);
         const countries = kind === "movie"
             ? (details.production_countries || []).map((country) => country.name).slice(0, 3).join(", ")
             : (details.origin_country || []).join(", ");
         const poster = imageURL(details.poster_path);
         const backdrop = imageURL(details.backdrop_path, "w1280");
-        const typeLabel = kind === "movie" ? "Movie" : "TV Show";
-        const episodeCount = kind === "tv" && details.number_of_seasons
-            ? `${details.number_of_seasons} season${details.number_of_seasons === 1 ? "" : "s"}`
-            : "";
-        const meta = [mediaYear(details), formatRuntime(runtime), episodeCount, certification, rating].filter(Boolean);
+        const seasonCount = kind === "tv" && details.number_of_seasons ? String(details.number_of_seasons) : "";
+        const episodeCount = kind === "tv" && details.number_of_episodes ? String(details.number_of_episodes) : "";
+        const releaseLine = [formatDate(releaseDate), relativeDate(releaseDate)].filter(Boolean).join(" · ");
+        const primaryGenre = genres[0] || "";
+        const spokenLanguages = (details.spoken_languages || [])
+            .map((language) => language.english_name || language.name)
+            .filter(Boolean)
+            .join(", ");
+        const networks = (details.networks || []).map((network) => network.name).filter(Boolean).join(", ");
+        const companies = (details.production_companies || []).slice(0, 3).map((company) => company.name).filter(Boolean).join(", ");
+        const statusTone = details.status === "Released" ? "green"
+            : details.status === "Returning Series" ? "mint"
+                : details.status === "Ended" ? "pink"
+                    : details.status === "Planned" ? "orange"
+                        : "blue";
+
+        const providerCards = providers.map((provider) => {
+            const logo = imageURL(provider.logo_path, "w185");
+            return `<div class="detail-provider">
+                ${logo ? `<img src="${escapeHTML(logo)}" alt="">` : `<span>${escapeHTML(provider.provider_name.slice(0, 2))}</span>`}
+                <span>${escapeHTML(provider.provider_name)}</span>
+            </div>`;
+        }).join("");
+
+        const castCards = cast.map((person) => {
+            const profile = imageURL(person.profile_path, "w185");
+            const initials = person.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("");
+            return `<article class="detail-person">
+                <div class="detail-person-image">
+                    ${profile ? `<img src="${escapeHTML(profile)}" alt="">` : `<span>${escapeHTML(initials)}</span>`}
+                </div>
+                <strong>${escapeHTML(person.name)}</strong>
+                ${person.character ? `<span>${escapeHTML(person.character)}</span>` : ""}
+            </article>`;
+        }).join("");
+
+        const metrics = [
+            detailMetric("★", "TMDB", rating),
+            detailMetric("◷", "Runtime", formatRuntime(runtime)),
+            detailMetric("▤", "Seasons", seasonCount),
+            detailMetric("▦", "Episodes", episodeCount),
+            detailMetric("◈", "Genre", primaryGenre),
+            detailMetric("!", kind === "movie" ? "Certificate" : "Rating", certification)
+        ].join("");
+
+        const aboutRows = [
+            detailAboutRow(kind === "movie" ? "Director" : "Created By", director),
+            detailAboutRow("Networks", networks),
+            detailAboutRow(kind === "movie" ? "Release" : "First Aired", formatDate(releaseDate), "indigo"),
+            detailAboutRow("Spoken Languages", spokenLanguages),
+            detailAboutRow("Genres", genres.join(", ")),
+            detailAboutRow(kind === "movie" ? "Production Country" : "Origin", countries),
+            detailAboutRow("Production", companies),
+            detailAboutRow("Status", details.status, statusTone)
+        ].join("");
 
         dialogContent.innerHTML = `
             <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details">&times;</button>
+            <span class="media-dialog-more" aria-hidden="true">•••</span>
             <div class="detail-visual"${backdrop ? ` style="background-image: url('${escapeHTML(backdrop)}')"` : ""}>
                 <div class="detail-poster-wrap">
                     ${poster
@@ -307,21 +392,40 @@
                 </div>
             </div>
             <div class="detail-body">
-                <p class="detail-type">${escapeHTML(typeLabel)}</p>
-                <h2 id="media-dialog-title">${escapeHTML(title)}</h2>
-                ${details.tagline ? `<p class="detail-tagline">${escapeHTML(details.tagline)}</p>` : ""}
-                ${meta.length ? `<div class="detail-meta">${meta.map((item) => `<span>${escapeHTML(item)}</span>`).join("")}</div>` : ""}
-                ${genres ? `<p class="detail-genres">${escapeHTML(genres)}</p>` : ""}
-                ${details.overview ? `<p class="detail-overview">${escapeHTML(details.overview)}</p>` : ""}
-                <div class="detail-facts">
-                    ${detailFact("Release", formatDate(releaseDate))}
-                    ${detailFact(kind === "movie" ? "Director" : "Created by", director)}
-                    ${detailFact("Cast", cast)}
-                    ${detailFact("Watch on", providerNames)}
-                    ${detailFact("Status", details.status)}
-                    ${detailFact("Original language", originalLanguageName(details.original_language))}
-                    ${detailFact(kind === "movie" ? "Production country" : "Origin", countries)}
-                </div>
+                <section class="detail-intro">
+                    <h2 id="media-dialog-title">${escapeHTML(title)}</h2>
+                    ${releaseLine ? `<p class="detail-release">${escapeHTML(releaseLine)}</p>` : ""}
+                    <div class="detail-actions" aria-label="Binge actions">
+                        <button class="detail-action detail-action--watchlist" type="button" data-detail-action="watchlist">
+                            <span class="detail-action-icon" aria-hidden="true">+</span>
+                            <span class="detail-action-label">Watchlist</span>
+                        </button>
+                        <button class="detail-action detail-action--watched is-active" type="button" data-detail-action="watched" data-active-label="${kind === "movie" ? "Watched" : "Watching"}">
+                            <span class="detail-action-icon" aria-hidden="true">✓</span>
+                            <span class="detail-action-label">${kind === "movie" ? "Watched" : "Watching"}</span>
+                        </button>
+                    </div>
+                    ${details.overview ? `
+                        <p class="detail-overview" data-detail-overview>${escapeHTML(details.overview)}</p>
+                        ${details.overview.length > 180 ? `<button class="detail-read-more" type="button" data-detail-read-more>Show more <span aria-hidden="true">⌄</span></button>` : ""}
+                    ` : ""}
+                </section>
+                ${metrics ? `<div class="detail-metrics" aria-label="Title metrics">${metrics}</div>` : ""}
+                ${providerCards ? `
+                    <section class="detail-section">
+                        <div class="detail-section-heading"><div><h3>Where to Watch</h3><p>${escapeHTML(providerType)}</p></div></div>
+                        <div class="detail-providers">${providerCards}</div>
+                    </section>` : ""}
+                ${castCards ? `
+                    <section class="detail-section">
+                        <div class="detail-section-heading"><div><h3>Cast</h3><p>${escapeHTML(cast.length)} featured cast members</p></div></div>
+                        <div class="detail-people">${castCards}</div>
+                    </section>` : ""}
+                ${aboutRows ? `
+                    <section class="detail-section detail-section--about">
+                        <div class="detail-section-heading"><div><h3>About</h3><p>Movie and show information</p></div></div>
+                        <div class="detail-about-list">${aboutRows}</div>
+                    </section>` : ""}
             </div>`;
     };
 
@@ -424,7 +528,32 @@
         button.addEventListener("click", () => setFilter(button.dataset.filter || "all"));
     });
     dialogContent.addEventListener("click", (event) => {
-        if (event.target.closest("[data-close-dialog]")) mediaDialog.close();
+        if (event.target.closest("[data-close-dialog]")) {
+            mediaDialog.close();
+            return;
+        }
+
+        const readMoreButton = event.target.closest("[data-detail-read-more]");
+        if (readMoreButton) {
+            const overview = dialogContent.querySelector("[data-detail-overview]");
+            const isExpanded = overview?.classList.toggle("is-expanded") || false;
+            readMoreButton.innerHTML = `${isExpanded ? "Show less" : "Show more"} <span aria-hidden="true">${isExpanded ? "⌃" : "⌄"}</span>`;
+            return;
+        }
+
+        const actionButton = event.target.closest("[data-detail-action]");
+        if (actionButton) {
+            const isActive = actionButton.classList.toggle("is-active");
+            const icon = actionButton.querySelector(".detail-action-icon");
+            const label = actionButton.querySelector(".detail-action-label");
+            if (actionButton.dataset.detailAction === "watchlist") {
+                if (icon) icon.textContent = isActive ? "✓" : "+";
+                if (label) label.textContent = isActive ? "In Watchlist" : "Watchlist";
+            } else {
+                if (icon) icon.textContent = isActive ? "✓" : "+";
+                if (label) label.textContent = isActive ? actionButton.dataset.activeLabel : "Mark Watched";
+            }
+        }
     });
     mediaDialog.addEventListener("click", (event) => {
         if (event.target === mediaDialog) mediaDialog.close();
