@@ -185,11 +185,11 @@ a:hover {
 
 .feature-showcase-inner {
     display: grid;
-    grid-template-columns: minmax(0, 800px) minmax(280px, 360px);
+    grid-template-columns: minmax(0, 880px) minmax(280px, 340px);
     align-items: center;
-    gap: clamp(52px, 6vw, 96px);
+    gap: clamp(48px, 5vw, 76px);
     width: 100%;
-    max-width: 1256px;
+    max-width: 1296px;
     margin: 0 auto;
 }
 
@@ -199,7 +199,7 @@ a:hover {
     align-items: start;
     gap: clamp(22px, 2.25vw, 38px);
     width: 100%;
-    max-width: 800px;
+    max-width: 880px;
 }
 
 .feature-image-frame {
@@ -220,7 +220,7 @@ a:hover {
 }
 
 .feature-copy {
-    max-width: 360px;
+    max-width: 340px;
 }
 
 .feature-copy p {
@@ -398,7 +398,7 @@ a:hover {
 
     .feature-cards {
         width: 100%;
-        max-width: 800px;
+        max-width: 880px;
     }
 }
 
