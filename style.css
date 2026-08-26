@@ -285,8 +285,20 @@ a:hover {
 
 @media (max-width: 900px) {
     .navbar {
+        position: relative;
         background: #101010;
         color: #f9f9f9;
+    }
+
+    .navbar::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 100%;
+        left: 0;
+        height: 100vh;
+        background: #101010;
+        pointer-events: none;
     }
 
     .hero {
