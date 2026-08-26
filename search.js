@@ -32,6 +32,7 @@
     let allResults = [];
     let activeFilter = "all";
     let lastScrollPosition = 0;
+    const externalRatingCache = new Map();
 
     const escapeHTML = (value = "") => String(value)
         .replaceAll("&", "&amp;")
@@ -248,6 +249,17 @@
         return `${hours}h${remainder ? ` ${remainder}m` : ""}`;
     };
 
+    const formatCompactCurrency = (value) => {
+        const amount = Number(value);
+        if (!amount) return "";
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            notation: "compact",
+            maximumFractionDigits: 1
+        }).format(amount);
+    };
+
     const certificationFor = (details, kind) => {
         if (kind === "movie") {
             const region = details.release_dates?.results?.find((item) => item.iso_3166_1 === "US");
@@ -264,6 +276,15 @@
             return new Intl.DisplayNames(["en"], { type: "language" }).of(code) || code.toUpperCase();
         } catch {
             return code.toUpperCase();
+        }
+    };
+
+    const regionName = (code) => {
+        if (!code) return "";
+        try {
+            return new Intl.DisplayNames(["en"], { type: "region" }).of(code) || code;
+        } catch {
+            return code;
         }
     };
 
@@ -288,11 +309,87 @@
         return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(value, unit);
     };
 
-    const detailMetric = (symbol, label, value) => value ? `
-        <div class="detail-metric">
-            <div class="detail-metric-label"><span aria-hidden="true">${escapeHTML(symbol)}</span>${escapeHTML(label)}</div>
+    const detailMetric = (symbol, label, value, tone = "", isExternal = false) => value ? `
+        <div class="detail-metric"${isExternal ? " data-external-rating" : ""}>
+            <div class="detail-metric-label"><span class="detail-metric-icon${tone ? ` detail-metric-icon--${escapeHTML(tone)}` : ""}" aria-hidden="true">${escapeHTML(symbol)}</span>${escapeHTML(label)}</div>
             <strong>${escapeHTML(value)}</strong>
         </div>` : "";
+
+    const wikidataRatingsURL = (imdbID) => {
+        const query = `
+            SELECT ?score ?reviewer ?method ?date WHERE {
+                ?item wdt:P345 "${imdbID}"; p:P444 ?statement.
+                ?statement ps:P444 ?score; pq:P447 ?reviewer.
+                VALUES ?reviewer { wd:Q105584 wd:Q150248 wd:Q37312 wd:Q18709181 }
+                OPTIONAL { ?statement pq:P459 ?method. }
+                OPTIONAL { ?statement pq:P585 ?date. }
+            }
+            ORDER BY DESC(?date)`;
+        const url = new URL("https://query.wikidata.org/sparql");
+        url.searchParams.set("query", query);
+        url.searchParams.set("format", "json");
+        return url;
+    };
+
+    const entityID = (binding) => binding?.value?.split("/").pop() || "";
+
+    const formattedSourceScore = (score, denominator) => {
+        const normalized = String(score || "").replace(",", ".").replaceAll(" ", "");
+        if (!normalized) return "";
+        if (normalized.endsWith("%")) return normalized;
+        const [value, scale] = normalized.split("/");
+        return value ? `${value} /${scale || denominator}` : "";
+    };
+
+    const fetchExternalRatingMetrics = (imdbID, kind) => {
+        if (!/^tt\d+$/.test(imdbID)) return Promise.resolve([]);
+        const cacheKey = `${kind}:${imdbID}`;
+        if (externalRatingCache.has(cacheKey)) return externalRatingCache.get(cacheKey);
+
+        const request = Promise.allSettled([
+            getJSON(new URL(`https://v3-cinemeta.strem.io/meta/${kind === "movie" ? "movie" : "series"}/${imdbID}.json`)),
+            getJSON(wikidataRatingsURL(imdbID))
+        ]).then(([cinemetaResult, wikidataResult]) => {
+            const bindings = wikidataResult.status === "fulfilled"
+                ? wikidataResult.value?.results?.bindings || []
+                : [];
+            const scoreFrom = (reviewer, method = "") => bindings.find((entry) =>
+                entityID(entry.reviewer) === reviewer && (!method || entityID(entry.method) === method)
+            )?.score?.value || "";
+
+            const critics = formattedSourceScore(scoreFrom("Q105584", "Q108403393"), "100");
+            const letterboxd = formattedSourceScore(scoreFrom("Q18709181"), "5");
+            const metacritic = formattedSourceScore(scoreFrom("Q150248"), "100");
+            const cinemetaRating = cinemetaResult.status === "fulfilled"
+                ? Number(cinemetaResult.value?.meta?.imdbRating)
+                : 0;
+            const imdb = cinemetaRating > 0
+                ? `${cinemetaRating.toFixed(1)} /10`
+                : formattedSourceScore(scoreFrom("Q37312"), "10");
+
+            return [
+                { symbol: "RT", label: "Critics", value: critics, tone: "rt" },
+                { symbol: "LB", label: "Letterboxd", value: letterboxd, tone: "letterboxd" },
+                { symbol: "IMDb", label: "IMDb", value: imdb, tone: "imdb" },
+                { symbol: "MC", label: "Metacritic", value: metacritic, tone: "metacritic" }
+            ].filter((metric) => metric.value);
+        });
+
+        externalRatingCache.set(cacheKey, request);
+        return request;
+    };
+
+    const hydrateExternalRatingMetrics = async (details, kind, request) => {
+        const imdbID = details.external_ids?.imdb_id || details.imdb_id || "";
+        const ratingMetrics = await fetchExternalRatingMetrics(imdbID, kind);
+        if (request.signal.aborted || detailRequest !== request || !ratingMetrics.length) return;
+        const metrics = dialogContent.querySelector(".detail-metrics");
+        if (!metrics) return;
+        metrics.querySelectorAll("[data-external-rating]").forEach((metric) => metric.remove());
+        metrics.insertAdjacentHTML("afterbegin", ratingMetrics.map((metric) =>
+            detailMetric(metric.symbol, metric.label, metric.value, metric.tone, true)
+        ).join(""));
+    };
 
     const detailAboutRow = (label, value, tone = "neutral") => value ? `
         <div class="detail-about-row">
@@ -361,6 +458,10 @@
             .join(", ");
         const networks = (details.networks || []).map((network) => network.name).filter(Boolean).join(", ");
         const companies = (details.production_companies || []).slice(0, 3).map((company) => company.name).filter(Boolean).join(", ");
+        const originCode = kind === "movie"
+            ? (details.production_companies || []).find((company) => company.origin_country)?.origin_country || ""
+            : (details.origin_country || [])[0] || "";
+        const origin = regionName(originCode) || (details.production_countries || [])[0]?.name || "";
         const statusTone = details.status === "Released" ? "green"
             : details.status === "Returning Series" ? "mint"
                 : details.status === "Ended" ? "pink"
@@ -391,12 +492,15 @@
         const crewCards = personCards(crew, crewRole);
 
         const metrics = [
-            detailMetric("★", "TMDB", rating),
+            detailMetric("★", "TMDB", rating, "tmdb"),
             detailMetric("◷", "Runtime", formatRuntime(runtime)),
             detailMetric("▤", "Seasons", seasonCount),
             detailMetric("▦", "Episodes", episodeCount),
             detailMetric("◈", "Genre", primaryGenre),
-            detailMetric("!", kind === "movie" ? "Certificate" : "Rating", certification)
+            detailMetric("!", kind === "movie" ? "Certificate" : "Rating", certification),
+            detailMetric("$", "Budget", kind === "movie" ? formatCompactCurrency(details.budget) : ""),
+            detailMetric("↗", "Revenue", kind === "movie" ? formatCompactCurrency(details.revenue) : ""),
+            detailMetric("◆", "Origin", origin)
         ].join("");
 
         const aboutRows = [
@@ -438,7 +542,7 @@
                         ${details.overview.length > 180 ? `<button class="detail-read-more" type="button" data-detail-read-more>Show more <span aria-hidden="true">⌄</span></button>` : ""}
                     ` : ""}
                 </section>
-                ${metrics ? `<div class="detail-metrics" aria-label="Title metrics">${metrics}</div>` : ""}
+                <div class="detail-metrics" aria-label="Title metrics">${metrics}</div>
                 ${providerCards ? `
                     <section class="detail-section">
                         <div class="detail-section-heading"><div><h3>Where to Watch</h3><p>${escapeHTML(providerType)}</p></div></div>
@@ -481,7 +585,10 @@
                 apiURL(`/${kind}/${item.id}`, { append_to_response: append }),
                 request.signal
             );
-            if (!request.signal.aborted && detailRequest === request) renderDetail(details, kind);
+            if (!request.signal.aborted && detailRequest === request) {
+                renderDetail(details, kind);
+                void hydrateExternalRatingMetrics(details, kind, request);
+            }
         } catch (error) {
             if (error?.name === "AbortError") return;
             dialogContent.innerHTML = `

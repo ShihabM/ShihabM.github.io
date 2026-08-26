@@ -1425,6 +1425,10 @@ body.search-fallback-entering .search-page-body {
     text-align: left;
 }
 
+.detail-metrics:empty {
+    display: none;
+}
+
 .detail-metrics::-webkit-scrollbar,
 .detail-providers::-webkit-scrollbar,
 .detail-people::-webkit-scrollbar {
@@ -1446,7 +1450,7 @@ body.search-fallback-entering .search-page-body {
     line-height: 1.2;
 }
 
-.detail-metric-label span {
+.detail-metric-icon {
     display: inline-flex;
     width: 19px;
     height: 19px;
@@ -1456,6 +1460,37 @@ body.search-fallback-entering .search-page-body {
     background: rgba(255, 255, 255, 0.08);
     color: #d6e6ee;
     font-size: 12px;
+}
+
+.detail-metric-icon--rt {
+    border-radius: 50%;
+    background: #f04444;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.detail-metric-icon--letterboxd {
+    background: #202830;
+    color: #ff9f0a;
+    font-size: 8px;
+    font-weight: 850;
+}
+
+.detail-metric-icon--imdb {
+    width: 29px;
+    background: #f5c518;
+    color: #090909;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.detail-metric-icon--metacritic {
+    background: #54c27a;
+    color: #06120a;
+    font-size: 8px;
+    font-weight: 900;
 }
 
 .detail-metric strong {
