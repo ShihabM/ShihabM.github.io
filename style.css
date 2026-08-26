@@ -225,7 +225,7 @@ a:hover {
 
 .feature-copy p {
     color: #b8b8b8;
-    font-size: clamp(19px, 1.65vw, 26px);
+    font-size: clamp(18px, 1.7vw, 24px);
     font-weight: 500;
     line-height: 1.4;
     letter-spacing: -0.02em;
@@ -373,7 +373,7 @@ a:hover {
 }
 
 .hero p {
-    font-size: 18px;
+    font-size: clamp(18px, 1.7vw, 24px);
     color: #666;
     margin-bottom: 32px;
     line-height: 1.6;
@@ -508,10 +508,6 @@ a:hover {
         width: min(100%, 540px);
     }
 
-    .feature-copy p {
-        font-size: 20px;
-    }
-
     .feature-copy p + p {
         margin-top: 22px;
     }
@@ -525,9 +521,6 @@ a:hover {
         gap: 44px;
     }
 
-    .notification-description {
-        font-size: 19px;
-    }
 }
 
 .img-bottom-right {
