@@ -1227,6 +1227,8 @@ body.search-fallback-entering .search-page-body {
     position: relative;
     min-height: 640px;
     overflow: hidden;
+    --detail-tint-rgb: 31, 32, 35;
+    --detail-deep-rgb: 14, 15, 17;
     background: #040506;
 }
 
@@ -1239,9 +1241,9 @@ body.search-fallback-entering .search-page-body {
     height: 48px;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(87, 190, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    background: rgba(12, 38, 54, 0.7);
+    background: rgba(var(--detail-tint-rgb), 0.78);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     backdrop-filter: blur(18px) saturate(140%);
     color: #f7f7f7;
@@ -1256,14 +1258,14 @@ body.search-fallback-entering .search-page-body {
 
 .detail-visual {
     min-height: 390px;
-    background-color: #0c2736;
+    background-color: rgb(var(--detail-tint-rgb));
     background-position: center 22%;
 }
 
 .detail-visual::after {
     background:
-        linear-gradient(to bottom, rgba(5, 16, 24, 0.12) 0%, rgba(8, 31, 44, 0.48) 47%, #0c2736 100%),
-        linear-gradient(to right, rgba(8, 31, 44, 0.26), rgba(8, 31, 44, 0.02), rgba(8, 31, 44, 0.26));
+        linear-gradient(to bottom, rgba(var(--detail-deep-rgb), 0.12) 0%, rgba(var(--detail-tint-rgb), 0.48) 47%, rgb(var(--detail-tint-rgb)) 100%),
+        linear-gradient(to right, rgba(var(--detail-tint-rgb), 0.28), rgba(var(--detail-tint-rgb), 0.02), rgba(var(--detail-tint-rgb), 0.28));
 }
 
 .detail-poster-wrap {
@@ -1277,7 +1279,7 @@ body.search-fallback-entering .search-page-body {
     max-width: none;
     margin: 0;
     padding: 0 0 52px;
-    background: linear-gradient(to bottom, #0c2736 0, #071820 230px, #040506 520px);
+    background: linear-gradient(to bottom, rgb(var(--detail-tint-rgb)) 0, rgb(var(--detail-deep-rgb)) 230px, #040506 520px);
     text-align: center;
 }
 

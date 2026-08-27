@@ -32,6 +32,7 @@
     let seasonRequest;
     let activeDetail;
     let ratingHydrationVersion = 0;
+    let detailTintVersion = 0;
     let allResults = [];
     let activeFilter = "all";
     let lastScrollPosition = 0;
@@ -48,6 +49,82 @@
     const imageURL = (path, size = "w780") => {
         if (!path || !/^\/[A-Za-z0-9._-]+$/.test(path)) return "";
         return `${TMDB_IMAGE_BASE}/${size}${path}`;
+    };
+
+    const resetDetailTint = () => {
+        detailTintVersion += 1;
+        dialogContent.style.removeProperty("--detail-tint-rgb");
+        dialogContent.style.removeProperty("--detail-deep-rgb");
+    };
+
+    const extractBackdropTint = (source) => new Promise((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.decoding = "async";
+        image.onload = () => {
+            try {
+                const canvas = document.createElement("canvas");
+                canvas.width = 36;
+                canvas.height = 20;
+                const context = canvas.getContext("2d", { willReadFrequently: true });
+                if (!context) throw new Error("Canvas is unavailable");
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+                const buckets = new Map();
+
+                for (let index = 0; index < pixels.length; index += 4) {
+                    if (pixels[index + 3] < 200) continue;
+                    const red = pixels[index];
+                    const green = pixels[index + 1];
+                    const blue = pixels[index + 2];
+                    const maximum = Math.max(red, green, blue);
+                    const minimum = Math.min(red, green, blue);
+                    if (maximum < 16 || minimum > 242) continue;
+
+                    const saturation = maximum ? (maximum - minimum) / maximum : 0;
+                    const key = `${red >> 5}-${green >> 5}-${blue >> 5}`;
+                    const weight = 0.45 + saturation * 1.55;
+                    const bucket = buckets.get(key) || { score: 0, red: 0, green: 0, blue: 0, weight: 0 };
+                    bucket.score += weight;
+                    bucket.red += red * weight;
+                    bucket.green += green * weight;
+                    bucket.blue += blue * weight;
+                    bucket.weight += weight;
+                    buckets.set(key, bucket);
+                }
+
+                const dominant = [...buckets.values()].sort((first, second) => second.score - first.score)[0];
+                if (!dominant?.weight) throw new Error("No backdrop tint was found");
+                const sourceColor = [dominant.red, dominant.green, dominant.blue]
+                    .map((channel) => channel / dominant.weight);
+                const maximum = Math.max(...sourceColor);
+                const minimum = Math.min(...sourceColor);
+                const isNeutral = maximum - minimum < 13;
+                const targetPeak = isNeutral ? 43 : 58;
+                const scale = targetPeak / Math.max(maximum, 1);
+                const base = [11, 12, 14];
+                const tint = sourceColor.map((channel, index) => Math.round(
+                    Math.min(targetPeak, channel * scale) * 0.84 + base[index] * 0.16
+                ));
+                const deep = tint.map((channel, index) => Math.round(channel * 0.5 + base[index] * 0.3));
+                resolve({ tint, deep });
+            } catch (error) {
+                reject(error);
+            }
+        };
+        image.onerror = () => reject(new Error("Backdrop tint image failed to load"));
+        image.src = source;
+    });
+
+    const applyBackdropTint = async (source, version) => {
+        try {
+            const { tint, deep } = await extractBackdropTint(source);
+            if (version !== detailTintVersion || !mediaDialog.open) return;
+            dialogContent.style.setProperty("--detail-tint-rgb", tint.join(", "));
+            dialogContent.style.setProperty("--detail-deep-rgb", deep.join(", "));
+        } catch {
+            // The neutral CSS fallback remains in place if the image cannot be sampled.
+        }
     };
 
     const mediaTitle = (item) => item.title || item.name || "Untitled";
@@ -683,6 +760,7 @@
             : (details.origin_country || []).join(", ");
         const poster = imageURL(details.poster_path);
         const backdrop = imageURL(details.backdrop_path, "w1280");
+        const backdropTintSource = imageURL(details.backdrop_path, "w300");
         const seasonCount = kind === "tv" && details.number_of_seasons ? String(details.number_of_seasons) : "";
         const episodeCount = kind === "tv" && details.number_of_episodes ? String(details.number_of_episodes) : "";
         const releaseLine = [formatDate(releaseDate), relativeDate(releaseDate)].filter(Boolean).join(" · ");
@@ -792,6 +870,9 @@
                         <div class="detail-about-list">${aboutRows}</div>
                     </section>` : ""}
             </div>`;
+        if (backdropTintSource) {
+            void applyBackdropTint(backdropTintSource, detailTintVersion);
+        }
     };
 
     async function openDetails(item) {
@@ -799,6 +880,7 @@
         seasonRequest?.abort();
         activeDetail = null;
         ratingHydrationVersion += 1;
+        resetDetailTint();
         const request = new AbortController();
         detailRequest = request;
         const kind = item.media_type === "movie" ? "movie" : "tv";
@@ -938,6 +1020,7 @@
         seasonRequest?.abort();
         activeDetail = null;
         ratingHydrationVersion += 1;
+        resetDetailTint();
     });
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && document.body.classList.contains("search-active") && !mediaDialog.open) {
