@@ -248,7 +248,7 @@ a:hover {
     position: relative;
     z-index: 1;
     overflow: hidden;
-    padding: 68px calc(30px + env(safe-area-inset-right)) 0 calc(30px + env(safe-area-inset-left));
+    padding: 60px calc(30px + env(safe-area-inset-right)) 0 calc(30px + env(safe-area-inset-left));
     background: #fff4f1;
     color: #221615;
     text-align: center;
@@ -295,7 +295,7 @@ a:hover {
     display: block;
     width: min(70%, 849px);
     height: auto;
-    margin: 16px auto 0;
+    margin: 16px auto -2px;
     filter: drop-shadow(0 24px 32px rgba(86, 30, 28, 0.16));
 }
 
@@ -670,7 +670,7 @@ a:hover {
     }
 
     .live-activity-showcase {
-        padding-top: 44px;
+        padding-top: 40px;
     }
 
     .live-activity-image {
