@@ -1942,7 +1942,7 @@ html body summary,
 html body label[for],
 html body [role="button"]:not([aria-disabled="true"]),
 html body [onclick]:not([aria-disabled="true"]) {
-    cursor: url("/assets/hand-cursor.png?v=1") 12 8, pointer !important;
+    cursor: pointer !important;
 }
 
 html body a[href] *,
@@ -1952,4 +1952,39 @@ html body label[for] *,
 html body [role="button"]:not([aria-disabled="true"]) *,
 html body [onclick]:not([aria-disabled="true"]) * {
     pointer-events: none !important;
+}
+
+.site-hand-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2147483647;
+    width: 32px;
+    height: 32px;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: url("/assets/hand-cursor.png?v=1") center / 32px 32px no-repeat;
+    contain: strict;
+    will-change: transform;
+}
+
+.site-hand-cursor.is-visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+@media (any-hover: hover) and (any-pointer: fine) {
+    html.site-hand-cursor-ready body a[href],
+    html.site-hand-cursor-ready body button:not(:disabled),
+    html.site-hand-cursor-ready body input[type="button"]:not(:disabled),
+    html.site-hand-cursor-ready body input[type="submit"]:not(:disabled),
+    html.site-hand-cursor-ready body input[type="reset"]:not(:disabled),
+    html.site-hand-cursor-ready body select:not(:disabled),
+    html.site-hand-cursor-ready body summary,
+    html.site-hand-cursor-ready body label[for],
+    html.site-hand-cursor-ready body [role="button"]:not([aria-disabled="true"]),
+    html.site-hand-cursor-ready body [onclick]:not([aria-disabled="true"]) {
+        cursor: none !important;
+    }
 }
