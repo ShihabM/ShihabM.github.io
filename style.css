@@ -235,6 +235,70 @@ a:hover {
     margin-top: 28px;
 }
 
+.integration-showcase {
+    position: relative;
+    z-index: 1;
+    padding: 144px calc(30px + env(safe-area-inset-right)) 160px calc(30px + env(safe-area-inset-left));
+    background: #101010;
+    color: #f7f7f7;
+}
+
+.integration-showcase-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 760px) minmax(280px, 420px);
+    align-items: center;
+    gap: clamp(56px, 7vw, 112px);
+    width: 100%;
+    max-width: 1296px;
+    margin: 0 auto;
+}
+
+.integration-image-frame {
+    width: 100%;
+    max-width: 760px;
+    padding: clamp(7px, 0.8vw, 11px);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: clamp(24px, 2.5vw, 36px);
+    background: #191919;
+    box-shadow: 0 28px 72px rgba(0, 0, 0, 0.38);
+}
+
+.integration-image-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: clamp(17px, 1.8vw, 26px);
+}
+
+.integration-copy {
+    max-width: 420px;
+}
+
+.integration-eyebrow {
+    margin-bottom: 18px;
+    color: #b9a5ff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.integration-copy h2 {
+    margin-bottom: 24px;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: normal;
+}
+
+.integration-description {
+    color: #b8b8b8;
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.48;
+}
+
 .notification-showcase {
     position: relative;
     z-index: 1;
@@ -359,6 +423,11 @@ a:hover {
         padding-right: 80px;
         padding-left: 80px;
     }
+
+    .integration-showcase {
+        padding-right: 80px;
+        padding-left: 80px;
+    }
 }
 
 .hero {
@@ -451,6 +520,7 @@ a:hover {
     }
 
     .hero h1,
+    .integration-copy h2,
     .notification-copy h2,
     .search-invitation h2 {
         font-size: 40px;
@@ -481,6 +551,20 @@ a:hover {
         grid-template-columns: 1fr;
         align-items: start;
         gap: 56px;
+    }
+
+    .integration-showcase-inner {
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 56px;
+    }
+
+    .integration-copy {
+        max-width: 680px;
+    }
+
+    .integration-image-frame {
+        max-width: 680px;
     }
 
     .notification-copy {
@@ -525,6 +609,15 @@ a:hover {
     .notification-showcase {
         padding-top: 88px;
         padding-bottom: 104px;
+    }
+
+    .integration-showcase {
+        padding-top: 88px;
+        padding-bottom: 104px;
+    }
+
+    .integration-showcase-inner {
+        gap: 44px;
     }
 
     .notification-showcase-inner {
@@ -692,6 +785,7 @@ body.search-active::after,
 body.search-active > .navbar,
 body.search-active > .hero,
 body.search-active > .feature-showcase,
+body.search-active > .integration-showcase,
 body.search-active > .notification-showcase,
 body.search-active > .search-invitation,
 body.search-active > .site-footer {
