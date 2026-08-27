@@ -21,7 +21,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=f683aeb">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=f683aeb">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png?v=f683aeb">
-    <link rel="stylesheet" href="style.css?v=65">
+    <link rel="stylesheet" href="style.css?v=66">
     <script src="search.js?v=10" defer></script>
 </head>
 
@@ -139,20 +139,15 @@
                 <input id="movie-search" name="query" type="search" inputmode="search" autocomplete="off" placeholder="Search movies and shows" enterkeyhint="search">
                 <button class="search-clear" id="search-clear" type="button" aria-label="Clear search" disabled><span class="xmark-icon" aria-hidden="true"></span></button>
             </form>
+            <div class="search-filters" role="group" aria-label="Filter search results">
+                <button class="search-filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+                <button class="search-filter" type="button" data-filter="movie" aria-pressed="false">Movies</button>
+                <button class="search-filter" type="button" data-filter="tv" aria-pressed="false">Shows</button>
+            </div>
         </header>
 
         <div class="search-page-body">
-            <div class="search-heading-row">
-                <div>
-                    <p class="search-kicker">Binge search</p>
-                    <h1 id="search-results-title">Movies &amp; Shows</h1>
-                </div>
-                <div class="search-filters" role="group" aria-label="Filter search results">
-                    <button class="search-filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
-                    <button class="search-filter" type="button" data-filter="movie" aria-pressed="false">Movies</button>
-                    <button class="search-filter" type="button" data-filter="tv" aria-pressed="false">Shows</button>
-                </div>
-            </div>
+            <h1 class="visually-hidden" id="search-results-title">Movies &amp; Shows</h1>
 
             <div class="search-status" id="search-status" aria-live="polite">
                 <span class="search-status-icon" aria-hidden="true"></span>
