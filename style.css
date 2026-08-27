@@ -575,7 +575,7 @@ select:not(:disabled),
 summary,
 [role="button"]:not([aria-disabled="true"]),
 [role="button"]:not([aria-disabled="true"]) * {
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 .visually-hidden {
