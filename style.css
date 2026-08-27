@@ -254,6 +254,18 @@ a:hover {
     text-align: center;
 }
 
+.live-activity-showcase::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: #000;
+    pointer-events: none;
+}
+
 .live-activity-showcase-inner {
     width: 100%;
     max-width: 1296px;
@@ -295,7 +307,7 @@ a:hover {
     display: block;
     width: min(70%, 849px);
     height: auto;
-    margin: 16px auto -2px;
+    margin: 16px auto 0;
     filter: drop-shadow(0 24px 32px rgba(86, 30, 28, 0.16));
 }
 
