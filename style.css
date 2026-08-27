@@ -1931,11 +1931,7 @@ body.search-fallback-entering .search-page-body {
     }
 }
 
-/* Load one cached hand image per tappable root; descendants inherit it. */
-:root {
-    --binge-hand-cursor: url("/assets/hand-cursor.png?v=1") 12 8, pointer;
-}
-
+/* Keep each tappable surface as one stable cursor hit target. */
 html body a[href],
 html body button:not(:disabled),
 html body input[type="button"]:not(:disabled),
@@ -1946,5 +1942,14 @@ html body summary,
 html body label[for],
 html body [role="button"]:not([aria-disabled="true"]),
 html body [onclick]:not([aria-disabled="true"]) {
-    cursor: var(--binge-hand-cursor) !important;
+    cursor: url("/assets/hand-cursor.png?v=1") 12 8, pointer !important;
+}
+
+html body a[href] *,
+html body button:not(:disabled) *,
+html body summary *,
+html body label[for] *,
+html body [role="button"]:not([aria-disabled="true"]) *,
+html body [onclick]:not([aria-disabled="true"]) * {
+    pointer-events: none !important;
 }
