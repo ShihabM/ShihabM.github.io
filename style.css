@@ -1931,7 +1931,11 @@ body.search-fallback-entering .search-page-body {
     }
 }
 
-/* Keep the hand cursor authoritative for every enabled interactive control. */
+/* Use a real hand image so embedded browsers do not fall back to an arrow. */
+:root {
+    --binge-hand-cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACPTkDJAAADe0lEQVRYCe2Wy09TQRTGpy+rJdYXMbZKE1MC0TRqDUG3rAhE3bhh51/QxritbCDGBYkbNw0LDBuMYQEhbmTTFeG1gQYopCRoxaQhSIu0QB90/L6hJZZQetuGlZzk15k7996ZM985c26FOLdzBf53BXQaBeBzRJ9vc2iJBGduXNgEnoOfIAZegwtA6wbwaPXGXVvB6sDAgJyYmJA6nW4X1zZgBGduXOQW+DU7OytpTU1NlP4FMIOajLsrZ5SZTqwvLy+rZ10uF9sHgKGpKQxaHOBiTLjvoVCIfZF34B66VIDOVe2EFgcodxasHnPgMcbeg7fgCmBS1uQM3j/R6OQ18Kq5uVnlwNLSEp2SXq9XdnR0sD8NIiAAbgOGRsvm8Fh540SXwVOj0ShTqZTMZDLSbDbLeDwug8GgNJlMcmFhQXZ1ddGZb+AzeAZqyhHGlRO4wV3AmG8uLi4qFdxut2Q/nU5Li8Uic7mcHB0dlXV1dbKvr0/CWR5VJ2BYKjYufhH0OxwOLpBC/x2YGx4eVg5EIhGZzWZVf3JyUrWxWEwODg6qfmdnJ9Xwgkug4iQ14KXrIBGNRuXKyopsaGjghJs9PT1qgXI/Ho+Hz38ELGIl86HUDY5TgdDQ0JBA4RGBQEDU19ffQAJiWIiDgwOxv7+v+hsbG6pNJBICjqk+coQtd3/qySjlAGc5AB98Pl8aCgin0ynGxsYETgKGDx3Y2tpS/X/bggM7Ozu8twcqlp8v0jFmPhPP39raehTvgvSM/9ramrpEfVBtOBxWyciL9vZ2bsIHGEqG9EQrpQArH/X9DT7NzMwEe3t7iybQ6/UCJ6BojGHBh0rAOYHvBu/NASp5GBeOVGCUjjF0gJcGgyE+Pj6udlr4YR2gQW7Vbm9vq3ZkZIQLhgHjZQFVhQHvHYWCE72xWq1pqKEWKfVDJxobG+lAN7gDWKJrMmYx48ivXzcKzZ7f71fV8LgTLEwtLS1c/Ct4CK6CUmHGLW3SUD5WRH5w7OAJ8NhsNldbW5uw2+0imUyK+fl5MTU1tYuK+AX3+8EPwGPCRCmZA1pjU3CCJ+NmnvtoHwGqw0oZAdNgHUQBF+c4E7qkaXWAE/BZhoMFio5YAZOU6nARLpYAf0AScOenLo77VWUnY8pzXfj+s0+J+Z8hk281H71KFMDcRcZ3CxRiXHbHRTOcX0CBv5wQ6g+szFiBAAAAAElFTkSuQmCC") 12 8, pointer;
+}
+
 html body a[href],
 html body a[href] *,
 html body button:not(:disabled),
@@ -1951,5 +1955,5 @@ html body [role="button"]:not([aria-disabled="true"]),
 html body [role="button"]:not([aria-disabled="true"]) *,
 html body [onclick]:not([aria-disabled="true"]),
 html body [onclick]:not([aria-disabled="true"]) * {
-    cursor: pointer !important;
+    cursor: var(--binge-hand-cursor) !important;
 }
