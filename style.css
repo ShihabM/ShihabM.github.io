@@ -627,7 +627,7 @@ a:hover {
     font-size: clamp(18px, 2vw, 22px);
     font-weight: 500;
     text-align: left;
-    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .search-launch {
@@ -637,7 +637,6 @@ a:hover {
 .search-launch:hover {
     border-color: rgba(29, 161, 242, 0.86);
     background: #242426;
-    transform: translateY(-2px);
 }
 
 .search-launch:focus-visible,
