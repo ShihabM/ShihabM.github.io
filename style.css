@@ -564,20 +564,6 @@ a:hover {
     }
 }
 
-a[href],
-a[href] *,
-button:not(:disabled),
-button:not(:disabled) *,
-input[type="button"]:not(:disabled),
-input[type="submit"]:not(:disabled),
-input[type="reset"]:not(:disabled),
-select:not(:disabled),
-summary,
-[role="button"]:not([aria-disabled="true"]),
-[role="button"]:not([aria-disabled="true"]) * {
-    cursor: pointer !important;
-}
-
 .visually-hidden {
     position: absolute !important;
     width: 1px !important;
@@ -1943,4 +1929,27 @@ body.search-fallback-entering .search-page-body {
         animation-duration: 1ms;
         animation-delay: 0ms;
     }
+}
+
+/* Keep the hand cursor authoritative for every enabled interactive control. */
+html body a[href],
+html body a[href] *,
+html body button:not(:disabled),
+html body button:not(:disabled) *,
+html body input[type="button"]:not(:disabled),
+html body input[type="button"]:not(:disabled) *,
+html body input[type="submit"]:not(:disabled),
+html body input[type="submit"]:not(:disabled) *,
+html body input[type="reset"]:not(:disabled),
+html body input[type="reset"]:not(:disabled) *,
+html body select:not(:disabled),
+html body summary,
+html body summary *,
+html body label[for],
+html body label[for] *,
+html body [role="button"]:not([aria-disabled="true"]),
+html body [role="button"]:not([aria-disabled="true"]) *,
+html body [onclick]:not([aria-disabled="true"]),
+html body [onclick]:not([aria-disabled="true"]) * {
+    cursor: pointer !important;
 }
