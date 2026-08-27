@@ -1263,12 +1263,12 @@ body.search-fallback-entering .search-page-body {
 
 .detail-visual::after {
     background:
-        linear-gradient(to bottom, rgba(var(--detail-deep-rgb), 0.12) 0%, rgba(var(--detail-tint-rgb), 0.48) 47%, rgb(var(--detail-tint-rgb)) 100%),
-        linear-gradient(to right, rgba(var(--detail-tint-rgb), 0.28), rgba(var(--detail-tint-rgb), 0.02), rgba(var(--detail-tint-rgb), 0.28));
+        linear-gradient(to bottom, rgba(var(--detail-deep-rgb), 0.08) 0%, rgba(var(--detail-tint-rgb), 0.18) 24%, rgba(var(--detail-tint-rgb), 0.58) 62%, rgb(var(--detail-tint-rgb)) 100%),
+        linear-gradient(to right, rgba(var(--detail-tint-rgb), 0.24), rgba(var(--detail-tint-rgb), 0.02), rgba(var(--detail-tint-rgb), 0.24));
 }
 
 .detail-poster-wrap {
-    bottom: 18px;
+    bottom: 38px;
     width: 150px;
     border-radius: 18px;
     box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
@@ -1278,7 +1278,7 @@ body.search-fallback-entering .search-page-body {
     max-width: none;
     margin: 0;
     padding: 0 0 52px;
-    background: linear-gradient(to bottom, rgb(var(--detail-tint-rgb)) 0, rgb(var(--detail-deep-rgb)) 230px, #040506 520px);
+    background: linear-gradient(to bottom, rgb(var(--detail-tint-rgb)) 0, rgb(var(--detail-tint-rgb)) 88px, rgb(var(--detail-deep-rgb)) 340px, #080a0c 560px, #040506 720px);
     text-align: center;
 }
 
