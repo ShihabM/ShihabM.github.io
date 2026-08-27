@@ -600,7 +600,7 @@ a:hover {
 }
 
 .search-invitation-eyebrow {
-    color: #72d6f7;
+    color: #1da1f2;
 }
 
 .search-invitation h2 {
@@ -619,7 +619,7 @@ a:hover {
     width: 100%;
     min-height: 72px;
     padding: 0 26px;
-    border: 1px solid rgba(114, 214, 247, 0.22);
+    border: 1px solid rgba(29, 161, 242, 0.28);
     border-radius: 999px;
     background: #1c1c1e;
     color: #a6a6ab;
@@ -635,7 +635,7 @@ a:hover {
 }
 
 .search-launch:hover {
-    border-color: rgba(114, 214, 247, 0.68);
+    border-color: rgba(29, 161, 242, 0.86);
     background: #242426;
     transform: translateY(-2px);
 }
@@ -647,7 +647,7 @@ a:hover {
 .search-clear:focus-visible,
 .media-dialog-close:focus-visible,
 .search-result-card:focus-visible {
-    outline: 3px solid #72d6f7;
+    outline: 3px solid #1da1f2;
     outline-offset: 3px;
 }
 
@@ -877,7 +877,7 @@ body.search-fallback-entering .search-page-body {
     justify-self: end;
     gap: 4px;
     padding: 4px;
-    border: 1px solid rgba(114, 214, 247, 0.18);
+    border: 1px solid rgba(29, 161, 242, 0.34);
     border-radius: 999px;
     background: #1c1c1e;
     white-space: nowrap;
@@ -900,9 +900,9 @@ body.search-fallback-entering .search-page-body {
 }
 
 .search-filter.is-active {
-    background: rgba(114, 214, 247, 0.2);
-    color: #e8faff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+    background: #1da1f2;
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(29, 161, 242, 0.34);
 }
 
 .search-status {
@@ -962,7 +962,7 @@ body.search-fallback-entering .search-page-body {
 
 .search-result-card:hover {
     z-index: 2;
-    border-color: rgba(114, 214, 247, 0.58);
+    border-color: rgba(29, 161, 242, 0.74);
     box-shadow: 0 24px 44px rgba(0, 0, 0, 0.42);
 }
 
@@ -1107,7 +1107,7 @@ body.search-fallback-entering .search-page-body {
 }
 
 .detail-type {
-    color: #72d6f7;
+    color: #1da1f2;
     font-size: 12px;
     font-weight: 750;
     letter-spacing: 0.09em;
@@ -1503,18 +1503,18 @@ body.search-fallback-entering .search-page-body {
     padding: 0 34px 0 13px;
     -webkit-appearance: none;
     appearance: none;
-    border: 1px solid rgba(114, 214, 247, 0.22);
+    border: 1px solid rgba(29, 161, 242, 0.36);
     border-radius: 999px;
     outline: 0;
-    background: rgba(10, 41, 57, 0.72);
-    color: #e8faff;
+    background: rgba(29, 161, 242, 0.16);
+    color: #fff;
     font: inherit;
     font-size: 13px;
     font-weight: 680;
 }
 
 .detail-season-picker select:focus-visible {
-    outline: 3px solid #72d6f7;
+    outline: 3px solid #1da1f2;
     outline-offset: 3px;
 }
 
