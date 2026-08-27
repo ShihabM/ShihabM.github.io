@@ -245,23 +245,19 @@ a:hover {
 
 .integration-showcase-inner {
     display: grid;
-    grid-template-columns: minmax(0, 760px) minmax(280px, 420px);
+    grid-template-columns: minmax(0, 380px) minmax(280px, 420px);
     align-items: center;
     gap: clamp(56px, 7vw, 112px);
     width: 100%;
-    max-width: 1296px;
+    max-width: 912px;
     margin: 0 auto;
 }
 
 .integration-image-frame {
     width: 100%;
-    max-width: 760px;
-    padding: clamp(7px, 0.8vw, 11px);
+    max-width: 380px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: clamp(24px, 2.5vw, 36px);
-    background: #191919;
-    box-shadow: 0 28px 72px rgba(0, 0, 0, 0.38);
 }
 
 .integration-image-frame img {
@@ -277,7 +273,7 @@ a:hover {
 
 .integration-eyebrow {
     margin-bottom: 18px;
-    color: #b9a5ff;
+    color: #f3ce4d;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.2;
@@ -564,7 +560,7 @@ a:hover {
     }
 
     .integration-image-frame {
-        max-width: 680px;
+        max-width: 340px;
     }
 
     .notification-copy {
@@ -618,6 +614,10 @@ a:hover {
 
     .integration-showcase-inner {
         gap: 44px;
+    }
+
+    .integration-image-frame {
+        max-width: 190px;
     }
 
     .notification-showcase-inner {
