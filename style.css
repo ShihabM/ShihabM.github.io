@@ -245,8 +245,8 @@ a:hover {
 
 .integration-showcase-inner {
     display: grid;
-    grid-template-columns: minmax(0, 380px) minmax(280px, 420px);
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+    align-items: start;
     gap: clamp(56px, 7vw, 112px);
     width: 100%;
     max-width: 1296px;
@@ -255,7 +255,7 @@ a:hover {
 
 .integration-image-frame {
     width: 100%;
-    max-width: 380px;
+    max-width: 780px;
     overflow: hidden;
     border-radius: clamp(24px, 2.5vw, 36px);
 }
@@ -559,10 +559,6 @@ a:hover {
         max-width: 680px;
     }
 
-    .integration-image-frame {
-        max-width: 340px;
-    }
-
     .notification-copy {
         max-width: 680px;
     }
@@ -614,10 +610,6 @@ a:hover {
 
     .integration-showcase-inner {
         gap: 44px;
-    }
-
-    .integration-image-frame {
-        max-width: 190px;
     }
 
     .notification-showcase-inner {
