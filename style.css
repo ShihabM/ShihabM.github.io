@@ -1275,8 +1275,10 @@ body.search-fallback-entering .search-page-body {
 }
 
 .detail-body {
+    position: relative;
+    z-index: 1;
     max-width: none;
-    margin: 0;
+    margin: -40px 0 0;
     padding: 0 0 52px;
     background: linear-gradient(to bottom, rgb(var(--detail-tint-rgb)) 0, rgb(var(--detail-tint-rgb)) 88px, rgb(var(--detail-deep-rgb)) 340px, #080a0c 560px, #040506 720px);
     text-align: center;
