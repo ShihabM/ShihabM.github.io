@@ -248,7 +248,7 @@ a:hover {
     position: relative;
     z-index: 1;
     overflow: hidden;
-    padding: 84px calc(30px + env(safe-area-inset-right)) 0 calc(30px + env(safe-area-inset-left));
+    padding: 68px calc(30px + env(safe-area-inset-right)) 0 calc(30px + env(safe-area-inset-left));
     background: #fff4f1;
     color: #221615;
     text-align: center;
@@ -670,7 +670,7 @@ a:hover {
     }
 
     .live-activity-showcase {
-        padding-top: 52px;
+        padding-top: 44px;
     }
 
     .live-activity-image {
