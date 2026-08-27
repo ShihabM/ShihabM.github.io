@@ -293,9 +293,9 @@ a:hover {
 
 .live-activity-image {
     display: block;
-    width: min(100%, 1213px);
+    width: min(70%, 849px);
     height: auto;
-    margin: 56px auto 0;
+    margin: 32px auto 0;
     filter: drop-shadow(0 24px 32px rgba(86, 30, 28, 0.16));
 }
 
@@ -674,7 +674,7 @@ a:hover {
     }
 
     .live-activity-image {
-        margin-top: 40px;
+        margin-top: 24px;
     }
 
     .notification-showcase {
