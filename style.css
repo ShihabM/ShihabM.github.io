@@ -321,7 +321,7 @@ a:hover {
 
 .integration-showcase-inner {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+    grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
     align-items: start;
     gap: clamp(56px, 7vw, 112px);
     width: 100%;
@@ -332,6 +332,7 @@ a:hover {
 .integration-image-frame {
     width: 100%;
     max-width: 780px;
+    justify-self: end;
     overflow: hidden;
     border-radius: clamp(24px, 2.5vw, 36px);
 }
