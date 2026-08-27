@@ -178,7 +178,7 @@ a:hover {
 .feature-showcase {
     position: relative;
     z-index: 1;
-    padding: 144px calc(30px + env(safe-area-inset-right)) 160px calc(30px + env(safe-area-inset-left));
+    padding: 88px calc(30px + env(safe-area-inset-right)) 96px calc(30px + env(safe-area-inset-left));
     background: #101010;
     color: #f7f7f7;
 }
@@ -238,7 +238,7 @@ a:hover {
 .integration-showcase {
     position: relative;
     z-index: 1;
-    padding: 144px calc(30px + env(safe-area-inset-right)) 160px calc(30px + env(safe-area-inset-left));
+    padding: 88px calc(30px + env(safe-area-inset-right)) 96px calc(30px + env(safe-area-inset-left));
     background: #000;
     color: #f7f7f7;
 }
@@ -298,7 +298,7 @@ a:hover {
 .notification-showcase {
     position: relative;
     z-index: 1;
-    padding: 144px calc(30px + env(safe-area-inset-right)) 160px calc(30px + env(safe-area-inset-left));
+    padding: 88px calc(30px + env(safe-area-inset-right)) 96px calc(30px + env(safe-area-inset-left));
     background: #eef3f6;
     color: #111;
 }
@@ -571,8 +571,8 @@ a:hover {
 
 @media (max-width: 720px) {
     .feature-showcase {
-        padding-top: 88px;
-        padding-bottom: 104px;
+        padding-top: 56px;
+        padding-bottom: 64px;
     }
 
     .feature-showcase-inner {
@@ -599,13 +599,13 @@ a:hover {
     }
 
     .notification-showcase {
-        padding-top: 88px;
-        padding-bottom: 104px;
+        padding-top: 56px;
+        padding-bottom: 64px;
     }
 
     .integration-showcase {
-        padding-top: 88px;
-        padding-bottom: 104px;
+        padding-top: 56px;
+        padding-bottom: 64px;
     }
 
     .integration-showcase-inner {
@@ -664,7 +664,7 @@ a:hover {
 .search-invitation {
     position: relative;
     z-index: 1;
-    padding: 132px calc(30px + env(safe-area-inset-right)) 124px calc(30px + env(safe-area-inset-left));
+    padding: 80px calc(30px + env(safe-area-inset-right)) 76px calc(30px + env(safe-area-inset-left));
     background: #101010;
     color: #f7f7f7;
     text-align: center;
@@ -1860,8 +1860,8 @@ body.search-fallback-entering .search-page-body {
 
 @media (max-width: 720px) {
     .search-invitation {
-        padding-top: 92px;
-        padding-bottom: 92px;
+        padding-top: 56px;
+        padding-bottom: 56px;
     }
 
     .search-invitation h2 {
