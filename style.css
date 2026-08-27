@@ -1816,7 +1816,7 @@ body.search-fallback-entering .search-page-body {
 
 .detail-about-list {
     display: grid;
-    gap: 2px;
+    gap: 0;
     background: transparent;
 }
 
@@ -1825,8 +1825,8 @@ body.search-fallback-entering .search-page-body {
     grid-template-columns: 4px minmax(96px, 0.72fr) minmax(0, 1.28fr);
     gap: 12px;
     align-items: center;
-    min-height: 58px;
-    padding: 11px 0;
+    min-height: 48px;
+    padding: 6px 0;
     background: transparent;
 }
 
