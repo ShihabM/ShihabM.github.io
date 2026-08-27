@@ -223,6 +223,15 @@ a:hover {
     max-width: 340px;
 }
 
+.feature-copy h2 {
+    margin-bottom: 24px;
+    color: #f7f7f7;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: normal;
+}
+
 .feature-copy p {
     color: #b8b8b8;
     font-size: clamp(18px, 1.7vw, 24px);
@@ -516,6 +525,7 @@ a:hover {
     }
 
     .hero h1,
+    .feature-copy h2,
     .integration-copy h2,
     .notification-copy h2,
     .search-invitation h2 {
