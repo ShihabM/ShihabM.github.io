@@ -244,6 +244,61 @@ a:hover {
     margin-top: 28px;
 }
 
+.live-activity-showcase {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding: 84px calc(30px + env(safe-area-inset-right)) 0 calc(30px + env(safe-area-inset-left));
+    background: #fff4f1;
+    color: #221615;
+    text-align: center;
+}
+
+.live-activity-showcase-inner {
+    width: 100%;
+    max-width: 1296px;
+    margin: 0 auto;
+}
+
+.live-activity-copy {
+    width: min(100%, 780px);
+    margin: 0 auto;
+}
+
+.live-activity-eyebrow {
+    margin-bottom: 18px;
+    color: #f04449;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.live-activity-copy h2 {
+    margin-bottom: 24px;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: normal;
+}
+
+.live-activity-description {
+    max-width: 720px;
+    margin: 0 auto;
+    color: #755e5a;
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.48;
+}
+
+.live-activity-image {
+    display: block;
+    width: min(100%, 1213px);
+    height: auto;
+    margin: 56px auto 0;
+    filter: drop-shadow(0 24px 32px rgba(86, 30, 28, 0.16));
+}
+
 .integration-showcase {
     position: relative;
     z-index: 1;
@@ -429,6 +484,11 @@ a:hover {
         padding-left: 80px;
     }
 
+    .live-activity-showcase {
+        padding-right: 80px;
+        padding-left: 80px;
+    }
+
     .integration-showcase {
         padding-right: 80px;
         padding-left: 80px;
@@ -526,6 +586,7 @@ a:hover {
 
     .hero h1,
     .feature-copy h2,
+    .live-activity-copy h2,
     .integration-copy h2,
     .notification-copy h2,
     .search-invitation h2 {
@@ -606,6 +667,14 @@ a:hover {
 
     .feature-copy p:not(.feature-eyebrow) + p {
         margin-top: 22px;
+    }
+
+    .live-activity-showcase {
+        padding-top: 52px;
+    }
+
+    .live-activity-image {
+        margin-top: 40px;
     }
 
     .notification-showcase {
@@ -787,6 +856,7 @@ body.search-active::after,
 body.search-active > .navbar,
 body.search-active > .hero,
 body.search-active > .feature-showcase,
+body.search-active > .live-activity-showcase,
 body.search-active > .integration-showcase,
 body.search-active > .notification-showcase,
 body.search-active > .search-invitation,
