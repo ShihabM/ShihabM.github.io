@@ -662,7 +662,7 @@
                             <label class="detail-season-picker">
                                 <span class="visually-hidden">Choose a season</span>
                                 <select data-season-select data-show-id="${details.id}" aria-label="Choose a season">${options}</select>
-                                <span aria-hidden="true">↕</span>
+                                <span class="detail-season-chevron" aria-hidden="true"></span>
                             </label>
                         </div>
                         <p data-season-summary>${escapeHTML(episodeCountText(Number(selected.episode_count) || 0))}</p>
