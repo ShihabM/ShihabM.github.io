@@ -1,0 +1,29 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "G8B3Y5XY4H.com.Shihab.Reel"
+        ],
+        "components": [
+          {
+            "/": "/",
+            "?": {
+              "type": "movie",
+              "id": "?*"
+            },
+            "comment": "Opens shared movie details in Binge."
+          },
+          {
+            "/": "/",
+            "?": {
+              "type": "show",
+              "id": "?*"
+            },
+            "comment": "Opens shared show details in Binge."
+          }
+        ]
+      }
+    ]
+  }
+}

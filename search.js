@@ -36,6 +36,8 @@
     let allResults = [];
     let activeFilter = "all";
     let lastScrollPosition = 0;
+    let suppressDetailLocationSync = false;
+    const defaultDocumentTitle = document.title;
     const externalRatingCache = new Map();
     const seasonCache = new Map();
 
@@ -128,6 +130,35 @@
     };
 
     const mediaTitle = (item) => item.title || item.name || "Untitled";
+
+    const mediaRouteFromLocation = () => {
+        const url = new URL(window.location.href);
+        const type = url.searchParams.get("type");
+        const id = Number(url.searchParams.get("id"));
+        if ((type !== "movie" && type !== "show") || !Number.isInteger(id) || id <= 0) {
+            return null;
+        }
+        return {
+            id,
+            media_type: type === "show" ? "tv" : "movie"
+        };
+    };
+
+    const mediaURL = (item) => {
+        const url = new URL(window.location.href);
+        url.pathname = "/";
+        url.searchParams.set("type", item.media_type === "movie" ? "movie" : "show");
+        url.searchParams.set("id", String(item.id));
+        url.hash = "";
+        return url;
+    };
+
+    const clearMediaLocation = () => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("type");
+        url.searchParams.delete("id");
+        window.history.replaceState(null, "", url);
+    };
     const mediaDate = (item) => item.release_date || item.first_air_date || "";
     const mediaYear = (item) => mediaDate(item).slice(0, 4);
 
@@ -875,7 +906,13 @@
         }
     };
 
-    async function openDetails(item) {
+    async function openDetails(item, { syncLocation = true } = {}) {
+        const itemID = Number(item.id);
+        if (!Number.isInteger(itemID) || itemID <= 0) return;
+        item.id = itemID;
+        if (syncLocation) {
+            window.history.pushState({ bingeMediaDetail: true }, "", mediaURL(item));
+        }
         detailRequest?.abort();
         seasonRequest?.abort();
         activeDetail = null;
@@ -900,6 +937,7 @@
             );
             if (!request.signal.aborted && detailRequest === request) {
                 activeDetail = { details, kind };
+                document.title = `${mediaTitle(details)} - Binge`;
                 renderDetail(details, kind);
                 void hydrateExternalRatingMetrics(details, kind, request);
                 if (kind === "tv") hydrateSeasonEpisodes(details, request);
@@ -1021,10 +1059,37 @@
         activeDetail = null;
         ratingHydrationVersion += 1;
         resetDetailTint();
+        document.title = defaultDocumentTitle;
+        if (suppressDetailLocationSync) {
+            suppressDetailLocationSync = false;
+            return;
+        }
+        if (!mediaRouteFromLocation()) return;
+        if (window.history.state?.bingeMediaDetail) {
+            window.history.back();
+        } else {
+            clearMediaLocation();
+        }
+    });
+    window.addEventListener("popstate", () => {
+        const route = mediaRouteFromLocation();
+        if (route) {
+            void openDetails(route, { syncLocation: false });
+            return;
+        }
+        if (mediaDialog.open) {
+            suppressDetailLocationSync = true;
+            mediaDialog.close();
+        }
     });
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && document.body.classList.contains("search-active") && !mediaDialog.open) {
             closeSearch();
         }
     });
+
+    const initialMediaRoute = mediaRouteFromLocation();
+    if (initialMediaRoute) {
+        void openDetails(initialMediaRoute, { syncLocation: false });
+    }
 })();
