@@ -1,0 +1,16 @@
+{
+  "name": "binge-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-site.mjs",
+    "check": "npm run check:secrets && npm test && npm run build",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "deploy": "npm run check && wrangler deploy",
+    "dev": "npm run build && wrangler dev",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "wrangler": "^4.36.0"
+  }
+}

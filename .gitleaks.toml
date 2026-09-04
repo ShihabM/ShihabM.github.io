@@ -1,0 +1,10 @@
+title = "Binge secret detection"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "tmdb-api-key"
+description = "Hard-coded TMDB v3 API key"
+regex = '''(?i)(?:tmdb_api_key|api_key)\s*[:=]\s*["']?([a-f0-9]{32})'''
+secretGroup = 1

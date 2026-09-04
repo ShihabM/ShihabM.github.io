@@ -1,8 +1,7 @@
 (() => {
     "use strict";
 
-    const TMDB_API_KEY = "***REMOVED***";
-    const TMDB_API_BASE = "https://api.themoviedb.org/3";
+    const TMDB_API_BASE = document.querySelector('meta[name="binge-api-base"]')?.content || "/api/tmdb";
     const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p";
     const SEARCH_DELAY = 350;
 
@@ -163,9 +162,7 @@
     const mediaYear = (item) => mediaDate(item).slice(0, 4);
 
     const apiURL = (path, parameters = {}) => {
-        const url = new URL(`${TMDB_API_BASE}${path}`);
-        url.searchParams.set("api_key", TMDB_API_KEY);
-        url.searchParams.set("language", "en-US");
+        const url = new URL(`${TMDB_API_BASE}${path}`, window.location.origin);
         Object.entries(parameters).forEach(([key, value]) => {
             if (value !== undefined && value !== null && value !== "") {
                 url.searchParams.set(key, value);
@@ -289,7 +286,7 @@
         resultsTitle.textContent = `Results for “${query}”`;
 
         try {
-            const parameters = { query, include_adult: "false", page: "1" };
+            const parameters = { query };
             const [movieResponse, showResponse] = await Promise.allSettled([
                 getJSON(apiURL("/search/movie", parameters), request.signal),
                 getJSON(apiURL("/search/tv", parameters), request.signal)
@@ -921,10 +918,6 @@
         const request = new AbortController();
         detailRequest = request;
         const kind = item.media_type === "movie" ? "movie" : "tv";
-        const append = kind === "movie"
-            ? "credits,release_dates,watch/providers,external_ids"
-            : "credits,content_ratings,watch/providers,external_ids";
-
         dialogContent.innerHTML = `
             <button class="media-dialog-close" type="button" data-close-dialog aria-label="Close details"><span class="xmark-icon" aria-hidden="true"></span></button>
             <div class="detail-loading" role="status">Loading ${escapeHTML(mediaTitle(item))}…</div>`;
@@ -932,7 +925,7 @@
 
         try {
             const details = await getJSON(
-                apiURL(`/${kind}/${item.id}`, { append_to_response: append }),
+                apiURL(`/${kind}/${item.id}`),
                 request.signal
             );
             if (!request.signal.aborted && detailRequest === request) {
