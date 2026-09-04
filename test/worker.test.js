@@ -60,7 +60,7 @@ test("uses the server secret without exposing it in the response", async () => {
 
     assert.equal(response.status, 200);
     assert.equal(requestedURL.searchParams.get("api_key"), secret);
-    assert.equal(fetchOptions.cf.cacheKey.includes(secret), false);
+    assert.equal(fetchOptions.cache, "no-store");
     assert.equal((await response.text()).includes(secret), false);
 });
 
@@ -122,7 +122,7 @@ test("does not forward upstream errors or redirects containing credentials", asy
         const response = await handleRequest(
             new Request("https://binge.movie/api/tmdb/movie/11"), environment,
             async (_url, options) => {
-                assert.equal(options.redirect, "error");
+                assert.equal(options.redirect, "manual");
                 return new Response(secret, { status, headers: { location: `https://example.com/${secret}` } });
             }
         );
@@ -131,4 +131,37 @@ test("does not forward upstream errors or redirects containing credentials", asy
         assert.equal(response.headers.has("location"), false);
         assert.equal((await response.text()).includes(secret), false);
     }
+});
+
+test("cache keys exclude credentials and cache hits still pass rate limiting", async () => {
+    let cached;
+    let rateChecks = 0;
+    let fetches = 0;
+    const cache = {
+        match: async (request) => {
+            assert.equal(request.url.includes(secret), false);
+            assert.equal(request.url.includes("api_key"), false);
+            return cached?.clone();
+        },
+        put: async (request, response) => {
+            assert.equal(request.url.includes(secret), false);
+            assert.equal(response.headers.has("access-control-allow-origin"), false);
+            cached = response;
+        }
+    };
+    const env = {
+        TMDB_API_KEY: secret,
+        TMDB_RATE_LIMITER: { limit: async () => ({ success: ++rateChecks <= 2 }) }
+    };
+    const fetcher = async () => { fetches++; return Response.json({ id: 11 }); };
+    const request = new Request("https://binge-movie.shihabm.workers.dev/api/tmdb/movie/11", {
+        headers: { origin: "https://binge.movie" }
+    });
+    for (let i = 0; i < 2; i++) {
+        const response = await handleRequest(request, env, fetcher, { cache });
+        assert.equal(response.status, 200);
+        assert.equal(response.headers.get("access-control-allow-origin"), "https://binge.movie");
+    }
+    assert.equal((await handleRequest(request, env, fetcher, { cache })).status, 429);
+    assert.equal(fetches, 1);
 });

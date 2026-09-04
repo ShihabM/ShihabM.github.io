@@ -87,7 +87,7 @@ const applyRateLimit = async (request, env, requestURL) => {
     return result.success;
 };
 
-export const handleRequest = async (request, env, fetchImpl = fetch) => {
+export const handleRequest = async (request, env, fetchImpl = fetch, { cache = globalThis.caches?.default, waitUntil } = {}) => {
     const requestURL = new URL(request.url);
 
     if (!requestURL.pathname.startsWith(`${API_PREFIX}/`)) {
@@ -117,41 +117,54 @@ export const handleRequest = async (request, env, fetchImpl = fetch) => {
             });
         }
         const isSearch = requestURL.pathname.includes("/search/");
-        const cacheURL = new URL(target.url);
-        cacheURL.searchParams.delete("api_key");
+        const cacheURL = new URL(requestURL.pathname, requestURL.origin);
+        if (isSearch) cacheURL.searchParams.set("query", target.url.searchParams.get("query"));
+        const cacheRequest = new Request(cacheURL);
+        const cached = await cache?.match(cacheRequest).catch(() => undefined);
+        if (cached) {
+            const response = new Response(cached.body, cached);
+            Object.entries(cors).forEach(([name, value]) => response.headers.set(name, value));
+            response.headers.set("vary", "Origin");
+            return response;
+        }
         const upstreamResponse = await fetchImpl(target.url, {
             headers: { accept: "application/json" },
-            redirect: "error",
+            redirect: "manual",
             signal: AbortSignal.timeout(10000),
-            cf: {
-                cacheEverything: true,
-                cacheTtlByStatus: { "200-299": isSearch ? 300 : 3600, "300-599": -1 },
-                cacheKey: cacheURL.toString()
-            }
+            cache: "no-store"
         });
         if (!upstreamResponse.ok) {
             const status = upstreamResponse.status === 404 ? 404 : 502;
             return json({ error: "Movie data is temporarily unavailable." }, status, cors);
         }
         const body = await upstreamResponse.arrayBuffer();
-        return new Response(body, {
+        const response = new Response(body, {
             status: upstreamResponse.status,
             headers: {
                 ...JSON_HEADERS,
-                ...cors,
                 "cache-control": isSearch
                     ? "public, max-age=60, s-maxage=300"
                     : "public, max-age=300, s-maxage=3600"
             }
         });
+        if (cache) {
+            const stored = cache.put(cacheRequest, response.clone()).catch(() => undefined);
+            if (waitUntil) waitUntil(stored);
+            else await stored;
+        }
+        Object.entries(cors).forEach(([name, value]) => response.headers.set(name, value));
+        return response;
     } catch (error) {
-        console.error("TMDB upstream request failed", { name: error?.name || "Error" });
+        const message = String(error?.message || "")
+            .replaceAll(env.TMDB_API_KEY, "[redacted]")
+            .replace(/https?:\/\/\S+/g, "[redacted URL]");
+        console.error("TMDB upstream request failed", { name: error?.name || "Error", message });
         return json({ error: "Movie data is temporarily unavailable." }, 502, cors);
     }
 };
 
 export default {
-    fetch(request, env) {
-        return handleRequest(request, env);
+    fetch(request, env, ctx) {
+        return handleRequest(request, env, fetch, { waitUntil: (promise) => ctx.waitUntil(promise) });
     }
 };
