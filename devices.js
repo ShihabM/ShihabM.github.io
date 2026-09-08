@@ -9,7 +9,6 @@ if (carousel) {
     let active = 0;
     let target = 0;
     let scrollTimer;
-    const playback = carousel.querySelector('[data-playback]');
     let autoplayTimer;
     let paused = reducedMotion.matches;
     let hovered = false;
@@ -21,8 +20,6 @@ if (carousel) {
         clearTimeout(autoplayTimer);
         const playing = !paused && !hovered && !focused && !touching && visible && !document.hidden;
         status.setAttribute('aria-live', playing ? 'off' : 'polite');
-        playback.setAttribute('aria-label', paused ? 'Play automatic slideshow' : 'Pause automatic slideshow');
-        playback.textContent = paused ? '▶' : 'Ⅱ';
         if (playing) autoplayTimer = setTimeout(() => {
             goTo(target + 1);
         }, 2000);
@@ -48,10 +45,6 @@ if (carousel) {
         scheduleAutoplay();
     }
 
-    playback.addEventListener('click', () => {
-        paused = !paused;
-        scheduleAutoplay();
-    });
     carousel.addEventListener('mouseenter', () => { hovered = true; scheduleAutoplay(); });
     carousel.addEventListener('mouseleave', () => { hovered = false; scheduleAutoplay(); });
     carousel.addEventListener('focusin', () => { focused = true; scheduleAutoplay(); });
