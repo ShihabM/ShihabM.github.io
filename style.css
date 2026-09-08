@@ -443,7 +443,7 @@ a:hover {
     position: relative;
     z-index: 1;
     padding: 68px calc(30px + env(safe-area-inset-right)) 72px calc(30px + env(safe-area-inset-left));
-    background: #e8e8e8;
+    background: #d2dce6;
     color: #111;
 }
 
@@ -515,6 +515,10 @@ a:hover {
     height: auto;
     object-fit: contain;
 }
+
+.device-slide:nth-child(1) { background: #b8323f; }
+.device-slide:nth-child(2) { background: #fff; }
+.device-slide:nth-child(3) { background: #3468b2; }
 
 /* Keep the original UI pixels over the repaired hardware artwork. */
 .device-slide .device-screen {
@@ -618,6 +622,7 @@ a:hover {
     .device-controls { justify-content: space-between; margin-top: 16px; }
     .device-arrows { position: static; }
     .device-dots { gap: 0; }
+    .device-dot { width: 36px; }
 }
 
 .footer-copyright {
