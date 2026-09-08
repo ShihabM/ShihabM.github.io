@@ -448,15 +448,25 @@ a:hover {
 }
 
 .devices-showcase-inner {
+    display: grid;
+    grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(56px, 7vw, 112px);
     width: 100%;
     max-width: 1296px;
     margin: 0 auto;
 }
 
 .devices-copy {
+    max-width: 420px;
+    text-align: left;
+}
+
+.device-carousel {
+    width: 100%;
+    min-width: 0;
     max-width: 780px;
-    margin: 0 auto 48px;
-    text-align: center;
+    justify-self: end;
 }
 
 .devices-eyebrow {
@@ -575,13 +585,13 @@ a:hover {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     min-height: 48px;
     margin-top: 24px;
 }
 
 .device-dots, .device-arrows { display: flex; gap: 8px; }
-.device-arrows { position: absolute; right: 0; }
+.device-arrows { position: static; }
 
 .device-dot, .device-arrow {
     display: grid;
@@ -616,9 +626,15 @@ a:hover {
     .devices-copy h2 { font-size: 40px; }
 }
 
+@media (max-width: 1000px) {
+    .devices-showcase-inner { grid-template-columns: 1fr; gap: 56px; }
+    .devices-copy { max-width: 680px; }
+    .device-carousel { justify-self: start; }
+}
+
 @media (max-width: 720px) {
     .devices-showcase { padding-top: 44px; padding-bottom: 48px; }
-    .devices-copy { margin-bottom: 32px; }
+    .devices-showcase-inner { gap: 44px; }
     .device-controls { justify-content: space-between; margin-top: 16px; }
     .device-arrows { position: static; }
     .device-dots { gap: 0; }

@@ -25,7 +25,7 @@ if (carousel) {
         playback.textContent = paused ? '▶' : 'Ⅱ';
         if (playing) autoplayTimer = setTimeout(() => {
             goTo(target + 1);
-        }, 5000);
+        }, 2000);
     }
 
     function goTo(index) {
