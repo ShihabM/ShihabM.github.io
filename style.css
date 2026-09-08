@@ -443,8 +443,8 @@ a:hover {
     position: relative;
     z-index: 1;
     padding: 68px calc(30px + env(safe-area-inset-right)) 72px calc(30px + env(safe-area-inset-left));
-    background: #101010;
-    color: #f7f7f7;
+    background: #e8e8e8;
+    color: #111;
 }
 
 .devices-showcase-inner {
@@ -461,7 +461,7 @@ a:hover {
 
 .devices-eyebrow {
     margin-bottom: 18px;
-    color: #9acdc8;
+    color: #39736d;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.2;
@@ -480,7 +480,7 @@ a:hover {
 .devices-description {
     max-width: 720px;
     margin: 0 auto;
-    color: #b8b8b8;
+    color: #626262;
     font-size: clamp(18px, 1.7vw, 24px);
     line-height: 1.48;
 }
@@ -556,6 +556,7 @@ a:hover {
     top: 3.703704%;
     width: 94.117647%;
     height: 62.222222%;
+    object-fit: fill;
 }
 
 .product-mockup .product-bezel {
@@ -597,7 +598,7 @@ a:hover {
     background: #686868;
 }
 
-.device-dot[aria-current="true"]::before { width: 24px; background: #f7f7f7; }
+.device-dot[aria-current="true"]::before { width: 24px; background: #111; }
 .device-arrow { background: #292929; }
 .device-arrow:hover { background: #3b3b3b; }
 .device-arrow svg { width: 22px; height: 22px; }
