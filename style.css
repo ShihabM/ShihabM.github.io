@@ -527,9 +527,9 @@ a:hover {
 }
 
 .device-slide:nth-child(1) { background: #b8323f; }
-.device-slide:nth-child(2) { background: #fff; }
-.device-slide:nth-child(3) { background: #3468b2; }
-.device-slide:nth-child(4) { background: #d6b9ee; }
+.device-slide:nth-child(2) { background: #d6b9ee; }
+.device-slide:nth-child(3) { background: #fff; }
+.device-slide:nth-child(4) { background: #3468b2; }
 
 /* Keep the original UI pixels over the repaired hardware artwork. */
 .device-slide .device-screen {
