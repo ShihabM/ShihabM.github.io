@@ -18,17 +18,20 @@
     };
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let paused = reducedMotion.matches;
-    let hovered = false;
+    let userPaused = null;
+    let interacting = false;
+    let touching = false;
+    let resumeTimer;
     let visible = false;
     let lastTime = 0;
     let frame = 0;
     let position = wall.scrollLeft;
     let loopWidth = group.getBoundingClientRect().width;
 
-    const canAnimate = () => !paused && !hovered && visible && !document.hidden;
+    const isPaused = () => userPaused ?? reducedMotion.matches;
+    const canAnimate = () => !isPaused() && !interacting && visible && !document.hidden;
     const updateButton = () => {
-        button.textContent = paused ? 'Resume animation' : 'Pause animation';
+        button.textContent = isPaused() ? 'Resume animation' : 'Pause animation';
     };
     const tick = time => {
         frame = 0;
@@ -48,33 +51,49 @@
         position = wall.scrollLeft;
         if (canAnimate()) frame = requestAnimationFrame(tick);
     };
-    const pause = () => {
-        paused = true;
-        updateButton();
+    const scheduleResume = () => {
+        clearTimeout(resumeTimer);
+        if (touching) return;
+        resumeTimer = setTimeout(() => {
+            interacting = false;
+            sync();
+        }, 1800);
+    };
+    const browse = () => {
+        interacting = true;
         sync();
+        scheduleResume();
     };
 
     button.hidden = false;
     updateButton();
     button.addEventListener('click', () => {
-        paused = !paused;
+        userPaused = !isPaused();
+        interacting = false;
+        clearTimeout(resumeTimer);
         updateButton();
         sync();
     });
-    wall.addEventListener('pointerenter', event => {
-        if (event.pointerType === 'mouse') { hovered = true; sync(); }
-    });
-    wall.addEventListener('pointerleave', () => { hovered = false; sync(); });
-    wall.addEventListener('pointerdown', pause, { passive: true });
+    wall.addEventListener('pointerdown', () => { touching = true; browse(); }, { passive: true });
+    const endTouch = () => {
+        if (!touching) return;
+        touching = false;
+        scheduleResume();
+    };
+    window.addEventListener('pointerup', endTouch, { passive: true });
+    window.addEventListener('pointercancel', endTouch, { passive: true });
     wall.addEventListener('wheel', event => {
-        if (Math.abs(event.deltaX) > 0 || event.shiftKey) pause();
+        if (Math.abs(event.deltaX) > 0 || event.shiftKey) browse();
     }, { passive: true });
-    wall.addEventListener('focus', pause);
+    wall.addEventListener('focus', browse);
     wall.addEventListener('keydown', event => {
-        if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) pause();
+        if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) browse();
     });
+    wall.addEventListener('scroll', () => {
+        // Allow touch momentum to finish before restarting automatic movement.
+        if (interacting) scheduleResume();
+    }, { passive: true });
     reducedMotion.addEventListener('change', () => {
-        paused = reducedMotion.matches;
         updateButton();
         sync();
     });
