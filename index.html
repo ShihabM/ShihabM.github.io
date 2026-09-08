@@ -23,8 +23,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=f683aeb">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png?v=f683aeb">
     <link rel="preload" as="image" type="image/png" href="/assets/hand-cursor.png?v=1">
-    <link rel="stylesheet" href="style.css?v=105">
+    <link rel="stylesheet" href="style.css?v=107">
     <script src="devices.js?v=4" defer></script>
+    <script src="widgets.js?v=1" defer></script>
     <script src="cursor.js?v=1" defer></script>
     <script src="search.js?v=14" defer></script>
 </head>
@@ -109,6 +110,34 @@
                 <img src="assets/service-connections.png?v=2" alt="Connected movie and TV tracking services floating above an astronaut" loading="lazy">
             </div>
         </div>
+    </section>
+
+    <section class="widgets-showcase" aria-labelledby="widgets-heading">
+        <div class="widgets-copy">
+            <p class="widgets-eyebrow">Home Screen widgets</p>
+            <h2 id="widgets-heading">Your next watch, at a glance.</h2>
+            <p class="widgets-description">Keep your watchlist close and your next watch even closer. Bring your favorite movies and shows to your Home Screen with widgets that make Binge feel right at home.</p>
+        </div>
+        <div class="widgets-wall" id="widgets-wall" tabindex="0" role="region" aria-label="Binge light-mode widgets. Scroll sideways to explore." aria-describedby="widgets-hint">
+            <div class="widgets-track">
+                <div class="widgets-group">
+                    <img class="widget-tile widget-tile--large" src="assets/widgets/movies-large.png" width="1092" height="1092" alt="Movie watchlist with Spider-Man: Brand New Day, The Odyssey, Toy Story 5, Supergirl, and The Devil Wears Prada 2" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--small" src="assets/widgets/movies-small.png" width="510" height="510" alt="Watchlist widget with Spider-Man: Brand New Day and The Odyssey" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--small" src="assets/widgets/shows-small.png" width="510" height="510" alt="Watchlist widget with House of the Dragon and The Bear" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--medium" src="assets/widgets/shows-medium.png" width="1092" height="510" alt="Show watchlist with House of the Dragon, The Bear, Severance, and Alien: Earth" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--large" src="assets/widgets/shows-large.png" width="1092" height="1092" alt="Show watchlist with House of the Dragon, The Bear, Severance, Alien: Earth, and Wednesday" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--small" src="assets/widgets/next-small.png" width="510" height="510" alt="Next Watch widget with Toy Story 5 and Supergirl" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--large" src="assets/widgets/next-large.png" width="1092" height="1092" alt="Your Next Watch with The Odyssey, Toy Story 5, Supergirl, The Devil Wears Prada 2, and Project Hail Mary" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--medium" src="assets/widgets/next-medium.png" width="1092" height="510" alt="Your Next Watch with Toy Story 5, Supergirl, The Devil Wears Prada 2, and Project Hail Mary" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--small" src="assets/widgets/movies-small-alt.png" width="510" height="510" alt="Watchlist widget with The Devil Wears Prada 2 and Project Hail Mary" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--small" src="assets/widgets/shows-small-alt.png" width="510" height="510" alt="Watchlist widget with Wednesday and The Pitt" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--small" src="assets/widgets/next-small-alt.png" width="510" height="510" alt="Next Watch widget with Spider-Man: Brand New Day and The Odyssey" loading="lazy" decoding="async">
+                    <img class="widget-tile widget-tile--medium" src="assets/widgets/movies-medium.png" width="1092" height="510" alt="Movie watchlist with Spider-Man: Brand New Day, The Odyssey, Toy Story 5, and Supergirl" loading="lazy" decoding="async">
+                </div>
+            </div>
+        </div>
+        <p class="visually-hidden" id="widgets-hint">Use the left and right arrow keys or swipe to browse. Browsing pauses automatic scrolling.</p>
+        <button class="widgets-motion" type="button" aria-controls="widgets-wall" hidden>Pause animation</button>
     </section>
 
     <section class="notification-showcase" aria-labelledby="notification-heading">

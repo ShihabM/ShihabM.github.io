@@ -883,9 +883,9 @@ a:hover {
     }
 
     .feature-cards {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 16px;
-        max-width: 320px;
+        max-width: 540px;
     }
 
     .feature-image-frame {
@@ -1089,6 +1089,7 @@ body.search-active > .hero,
 body.search-active > .feature-showcase,
 body.search-active > .live-activity-showcase,
 body.search-active > .integration-showcase,
+body.search-active > .widgets-showcase,
 body.search-active > .notification-showcase,
 body.search-active > .devices-showcase,
 body.search-active > .search-invitation,
@@ -2438,4 +2439,117 @@ html body [onclick]:not([aria-disabled="true"]) * {
     html.site-hand-cursor-ready body [onclick]:not([aria-disabled="true"]) {
         cursor: none !important;
     }
+}
+
+/* Native iPhone widget renders, arranged as a seamless three-row wall. */
+.widgets-showcase {
+    --widget-size: 170px;
+    --widget-gap: 24px;
+    position: relative;
+    z-index: 1;
+    padding: 84px 0 42px;
+    background: #f7f8fa;
+    color: #111;
+}
+
+.widgets-copy {
+    max-width: 790px;
+    margin: 0 auto 34px;
+    padding: 0 30px;
+    text-align: center;
+}
+
+.widgets-eyebrow {
+    margin-bottom: 18px;
+    color: #4271c8;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.widgets-copy h2 {
+    margin-bottom: 24px;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.widgets-description {
+    color: #62666e;
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.48;
+}
+
+.widgets-wall {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    /* Leave space for shadows and soften the entrance and exit of the wall. */
+    padding: 24px 0 38px;
+    mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+}
+
+.widgets-wall::-webkit-scrollbar { display: none; }
+.widgets-track { display: flex; width: max-content; }
+.widgets-group {
+    display: grid;
+    flex: none;
+    grid-template-columns: repeat(8, var(--widget-size));
+    grid-template-rows: repeat(3, var(--widget-size));
+    gap: var(--widget-gap);
+    padding-right: var(--widget-gap);
+}
+
+.widget-tile {
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 3px 5px rgb(27 39 58 / 5%)) drop-shadow(0 10px 12px rgb(27 39 58 / 7%));
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.widget-tile:nth-child(1) { grid-area: 1 / 1 / 3 / 3; }
+.widget-tile:nth-child(2) { grid-area: 1 / 3; }
+.widget-tile:nth-child(3) { grid-area: 2 / 3; }
+.widget-tile:nth-child(4) { grid-area: 1 / 4 / 2 / 6; }
+.widget-tile:nth-child(5) { grid-area: 2 / 4 / 4 / 6; }
+.widget-tile:nth-child(6) { grid-area: 1 / 6; }
+.widget-tile:nth-child(7) { grid-area: 1 / 7 / 3 / 9; }
+.widget-tile:nth-child(8) { grid-area: 3 / 1 / 4 / 3; }
+.widget-tile:nth-child(9) { grid-area: 3 / 3; }
+.widget-tile:nth-child(10) { grid-area: 2 / 6; }
+.widget-tile:nth-child(11) { grid-area: 3 / 6; }
+.widget-tile:nth-child(12) { grid-area: 3 / 7 / 4 / 9; }
+
+.widgets-motion {
+    display: block;
+    min-height: 44px;
+    margin: 0 auto;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #62666e;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.widgets-motion[hidden] { display: none; }
+.widgets-motion:hover { background: #e9edf2; color: #111; }
+.widgets-motion:focus-visible,
+.widgets-wall:focus-visible { outline: 3px solid #4271c8; outline-offset: -3px; }
+
+@media (max-width: 767px) {
+    .widgets-showcase {
+        --widget-size: 136px;
+        --widget-gap: 19.2px;
+        padding-top: 56px;
+        padding-bottom: 28px;
+    }
+    .widgets-copy { margin-bottom: 20px; }
+    .widgets-copy h2 { font-size: 40px; }
 }
