@@ -23,7 +23,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=f683aeb">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png?v=f683aeb">
     <link rel="preload" as="image" type="image/png" href="/assets/hand-cursor.png?v=1">
-    <link rel="stylesheet" href="style.css?v=95">
+    <link rel="stylesheet" href="style.css?v=97">
+    <script src="devices.js?v=1" defer></script>
     <script src="cursor.js?v=1" defer></script>
     <script src="search.js?v=14" defer></script>
 </head>
@@ -120,6 +121,49 @@
 
             <div class="feature-image-frame notification-image-frame">
                 <img src="assets/instant-notifications.png" alt="Binge notification announcing that a new Ted Lasso episode is available" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <section class="devices-showcase" aria-labelledby="devices-heading">
+        <div class="devices-showcase-inner">
+            <div class="devices-copy">
+                <p class="devices-eyebrow">On every screen</p>
+                <h2 id="devices-heading">Your Binge. Your devices.</h2>
+                <p class="devices-description">Available across multiple devices, Binge keeps your movies and shows close. Explore your next watch on the big screen, or take your library with you.</p>
+            </div>
+
+            <div class="device-carousel" role="region" aria-roledescription="carousel" aria-label="Binge on your devices">
+                <div class="device-track" id="device-track" tabindex="0" aria-label="Device previews. Use the left and right arrow keys to browse.">
+                    <div class="device-slide" role="group" aria-roledescription="slide" aria-label="1 of 3">
+                        <div class="product-mockup product-mockup--ipad">
+                            <img class="product-screen" src="assets/ipad-pro-screen.png" width="2420" height="1668" alt="Binge showing currently streaming and popular shows on iPad Pro" loading="lazy" decoding="async">
+                            <img class="product-bezel" src="assets/ipad-pro-bezel.png" width="2640" height="1880" alt="" loading="lazy" decoding="async" aria-hidden="true">
+                        </div>
+                    </div>
+                    <div class="device-slide" role="group" aria-roledescription="slide" aria-label="2 of 3">
+                        <div class="product-mockup product-mockup--imac">
+                            <img class="product-screen" src="assets/imac-screen.png" width="1280" height="800" alt="Binge’s Mac app showing movies on a silver iMac" loading="lazy" decoding="async">
+                            <img class="product-bezel" src="assets/imac-bezel.png" width="4760" height="4050" alt="" loading="lazy" decoding="async" aria-hidden="true">
+                        </div>
+                    </div>
+                    <div class="device-slide" role="group" aria-roledescription="slide" aria-label="3 of 3">
+                        <img src="assets/apple-tv-showcase.png" width="1536" height="1024" alt="Binge on Apple TV, with the TV box and Siri Remote" loading="lazy" decoding="async">
+                        <img class="device-screen" src="assets/apple-tv-screen.png" width="3840" height="2160" alt="" loading="lazy" decoding="async" aria-hidden="true">
+                    </div>
+                </div>
+                <div class="device-controls">
+                    <div class="device-dots" role="group" aria-label="Choose a device preview">
+                        <button type="button" class="device-dot" aria-label="Go to slide 1" aria-current="true" aria-controls="device-track" data-slide="0"></button>
+                        <button type="button" class="device-dot" aria-label="Go to slide 2" aria-controls="device-track" data-slide="1"></button>
+                        <button type="button" class="device-dot" aria-label="Go to slide 3" aria-controls="device-track" data-slide="2"></button>
+                    </div>
+                    <div class="device-arrows">
+                        <button type="button" class="device-arrow" data-direction="-1" aria-label="Previous device preview" aria-controls="device-track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+                        <button type="button" class="device-arrow" data-direction="1" aria-label="Next device preview" aria-controls="device-track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
+                    </div>
+                    <p class="visually-hidden" id="device-status" aria-live="polite" aria-atomic="true">Slide 1 of 3</p>
+                </div>
             </div>
         </div>
     </section>

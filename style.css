@@ -439,6 +439,186 @@ a:hover {
     border-radius: inherit;
 }
 
+.devices-showcase {
+    position: relative;
+    z-index: 1;
+    padding: 68px calc(30px + env(safe-area-inset-right)) 72px calc(30px + env(safe-area-inset-left));
+    background: #101010;
+    color: #f7f7f7;
+}
+
+.devices-showcase-inner {
+    width: 100%;
+    max-width: 1296px;
+    margin: 0 auto;
+}
+
+.devices-copy {
+    max-width: 780px;
+    margin: 0 auto 48px;
+    text-align: center;
+}
+
+.devices-eyebrow {
+    margin-bottom: 18px;
+    color: #9acdc8;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.devices-copy h2 {
+    margin-bottom: 24px;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: normal;
+}
+
+.devices-description {
+    max-width: 720px;
+    margin: 0 auto;
+    color: #b8b8b8;
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.48;
+}
+
+.device-track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    border-radius: clamp(24px, 2.5vw, 36px);
+}
+
+.device-track::-webkit-scrollbar { display: none; }
+
+.device-slide {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    flex: 0 0 100%;
+    min-width: 0;
+    overflow: hidden;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    border-radius: clamp(24px, 2.5vw, 36px);
+    background: #000;
+}
+
+.device-slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Keep the original UI pixels over the repaired hardware artwork. */
+.device-slide .device-screen {
+    position: absolute;
+    left: 6.12%;
+    top: 10.16%;
+    width: 82.42%;
+    height: 70.12%;
+    object-fit: fill;
+}
+
+.product-mockup {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    height: 84%;
+    transform: translateX(-50%);
+}
+
+.product-mockup--ipad { aspect-ratio: 2640 / 1880; }
+.product-mockup--imac { aspect-ratio: 4760 / 4050; }
+
+.product-mockup .product-screen {
+    position: absolute;
+    background: #000;
+    object-fit: contain;
+}
+
+/* Screen openings measured from Apple's original PNGs. */
+.product-mockup--ipad .product-screen {
+    left: 4.166667%;
+    top: 5.638298%;
+    width: 91.666667%;
+    height: 88.723404%;
+}
+
+.product-mockup--imac .product-screen {
+    left: 2.941176%;
+    top: 3.703704%;
+    width: 94.117647%;
+    height: 62.222222%;
+}
+
+.product-mockup .product-bezel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.device-controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin-top: 24px;
+}
+
+.device-dots, .device-arrows { display: flex; gap: 8px; }
+.device-arrows { position: absolute; right: 0; }
+
+.device-dot, .device-arrow {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    color: #f7f7f7;
+    background: transparent;
+}
+
+.device-dot::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #686868;
+}
+
+.device-dot[aria-current="true"]::before { width: 24px; background: #f7f7f7; }
+.device-arrow { background: #292929; }
+.device-arrow:hover { background: #3b3b3b; }
+.device-arrow svg { width: 22px; height: 22px; }
+.device-track:focus-visible, .device-dot:focus-visible, .device-arrow:focus-visible { outline: 2px solid #9acdc8; outline-offset: 4px; }
+
+@media (min-width: 768px) {
+    .devices-showcase { padding-right: 80px; padding-left: 80px; }
+}
+
+@media (max-width: 900px) {
+    .devices-copy h2 { font-size: 40px; }
+}
+
+@media (max-width: 720px) {
+    .devices-showcase { padding-top: 44px; padding-bottom: 48px; }
+    .devices-copy { margin-bottom: 32px; }
+    .device-controls { justify-content: space-between; margin-top: 16px; }
+    .device-arrows { position: static; }
+    .device-dots { gap: 0; }
+}
+
 .footer-copyright {
     color: #5f5f5f;
     font-size: 14px;
@@ -872,6 +1052,7 @@ body.search-active > .feature-showcase,
 body.search-active > .live-activity-showcase,
 body.search-active > .integration-showcase,
 body.search-active > .notification-showcase,
+body.search-active > .devices-showcase,
 body.search-active > .search-invitation,
 body.search-active > .site-footer {
     display: none;
