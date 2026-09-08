@@ -179,7 +179,7 @@ a:hover {
     position: relative;
     z-index: 1;
     padding: 68px calc(30px + env(safe-area-inset-right)) 72px calc(30px + env(safe-area-inset-left));
-    background: #101010;
+    background: #161616;
     color: #f7f7f7;
 }
 
@@ -217,6 +217,17 @@ a:hover {
     width: 100%;
     height: auto;
     border-radius: clamp(14px, 1.5vw, 22px);
+}
+
+.feature-cards .feature-image-frame {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.feature-cards .feature-image-frame img {
+    border-radius: inherit;
 }
 
 .feature-copy {
