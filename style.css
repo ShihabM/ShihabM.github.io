@@ -343,7 +343,7 @@ a:hover {
 
 .apple-intelligence-eyebrow {
     margin-bottom: 18px;
-    color: #a8a8ad;
+    color: #d7ad5a;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.2;
@@ -368,67 +368,105 @@ a:hover {
 }
 
 .apple-intelligence-stage {
-    display: grid;
-    grid-template-columns: minmax(330px, 0.84fr) minmax(500px, 1.16fr);
-    align-items: end;
-    gap: clamp(46px, 6vw, 96px);
-    margin-top: clamp(56px, 7vw, 92px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(38px, 4vw, 58px);
+    margin-top: clamp(48px, 5vw, 68px);
 }
 
 .apple-intelligence-conversation {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(24px, 3vw, 38px);
-    padding-bottom: clamp(110px, 12vw, 170px);
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    row-gap: clamp(18px, 2.2vw, 30px);
+    width: min(100%, 940px);
 }
 
 .apple-intelligence-bubble {
     position: relative;
     width: fit-content;
-    max-width: min(100%, 560px);
-    padding: clamp(20px, 2.4vw, 30px) clamp(24px, 3vw, 38px);
+    padding: clamp(18px, 2vw, 26px) clamp(23px, 2.7vw, 34px);
     border: 1px solid #686b70;
     border-radius: clamp(28px, 3vw, 42px);
     background: #484b50;
     color: #f4f4f6;
     box-shadow: 0 18px 38px rgba(0, 0, 0, 0.2);
-    font-size: clamp(20px, 2.2vw, 30px);
     font-weight: 400;
     line-height: 1.22;
     letter-spacing: -0.025em;
+}
+
+.apple-intelligence-bubble:nth-child(1) {
+    grid-column: 1 / span 7;
+    max-width: 560px;
+    font-size: clamp(22px, 2.1vw, 30px);
+    transform: translateY(6px) rotate(-1.2deg);
+}
+
+.apple-intelligence-bubble:nth-child(2) {
+    grid-column: 7 / span 6;
+    justify-self: end;
+    max-width: 470px;
+    font-size: clamp(19px, 1.75vw, 25px);
+    transform: rotate(1.1deg);
+}
+
+.apple-intelligence-bubble:nth-child(3) {
+    grid-column: 3 / span 8;
+    max-width: 620px;
+    font-size: clamp(21px, 1.95vw, 28px);
+    transform: translateY(-4px) rotate(-0.6deg);
 }
 
 .apple-intelligence-bubble strong {
     font-weight: 720;
 }
 
+.apple-intelligence-bubble::before,
 .apple-intelligence-bubble::after {
     content: "";
     position: absolute;
-    bottom: -2px;
-    width: 28px;
-    height: 26px;
-    background: #484b50;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.apple-intelligence-bubble--left::before {
+    bottom: -14px;
+    left: 34px;
+    border-width: 14px 15px 0 0;
+    border-color: #686b70 transparent transparent transparent;
 }
 
 .apple-intelligence-bubble--left::after {
-    left: -10px;
-    clip-path: polygon(100% 0, 100% 100%, 0 100%, 42% 72%);
+    bottom: -12px;
+    left: 35px;
+    border-width: 13px 14px 0 0;
+    border-color: #484b50 transparent transparent transparent;
 }
 
 .apple-intelligence-bubble--right {
-    align-self: flex-end;
+    justify-self: end;
+}
+
+.apple-intelligence-bubble--right::before {
+    right: 34px;
+    bottom: -14px;
+    border-width: 14px 0 0 15px;
+    border-color: #686b70 transparent transparent transparent;
 }
 
 .apple-intelligence-bubble--right::after {
-    right: -10px;
-    clip-path: polygon(0 0, 58% 72%, 100% 100%, 0 100%);
+    right: 35px;
+    bottom: -12px;
+    border-width: 13px 0 0 14px;
+    border-color: #484b50 transparent transparent transparent;
 }
 
 .apple-intelligence-phone {
-    width: min(100%, 620px);
+    width: min(100%, 480px);
     aspect-ratio: 1036 / 1190;
-    justify-self: end;
     overflow: hidden;
 }
 
@@ -968,19 +1006,12 @@ a:hover {
         max-width: 880px;
     }
 
-    .apple-intelligence-stage {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
-
     .apple-intelligence-conversation {
-        width: min(100%, 760px);
-        padding-bottom: 54px;
+        width: min(100%, 820px);
     }
 
     .apple-intelligence-phone {
-        width: min(100%, 620px);
-        justify-self: center;
+        width: min(62vw, 440px);
     }
 
     .notification-showcase-inner {
@@ -1055,17 +1086,35 @@ a:hover {
     }
 
     .apple-intelligence-stage {
+        gap: 36px;
         margin-top: 46px;
     }
 
     .apple-intelligence-conversation {
-        gap: 22px;
-        padding-right: 10px;
-        padding-left: 10px;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        row-gap: 20px;
     }
 
-    .apple-intelligence-bubble {
+    .apple-intelligence-bubble:nth-child(1) {
+        grid-column: 1 / span 5;
         max-width: 94%;
+        transform: rotate(-1deg);
+    }
+
+    .apple-intelligence-bubble:nth-child(2) {
+        grid-column: 2 / span 5;
+        max-width: 90%;
+        transform: rotate(1deg);
+    }
+
+    .apple-intelligence-bubble:nth-child(3) {
+        grid-column: 1 / span 6;
+        max-width: 94%;
+        transform: translateX(5%) rotate(-0.5deg);
+    }
+
+    .apple-intelligence-phone {
+        width: min(88%, 360px);
     }
 
     .notification-showcase {
