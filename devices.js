@@ -1,6 +1,7 @@
 const carousel = document.querySelector('.device-carousel');
 
 if (carousel) {
+    const section = carousel.closest('.devices-showcase');
     const track = carousel.querySelector('.device-track');
     const slides = [...track.children];
     const dots = [...carousel.querySelectorAll('[data-slide]')];
@@ -16,6 +17,10 @@ if (carousel) {
     let touching = false;
     let visible = false;
 
+    function applyTheme(index) {
+        if (section) section.dataset.activeDevice = String(index);
+    }
+
     function scheduleAutoplay() {
         clearTimeout(autoplayTimer);
         const playing = !paused && !hovered && !focused && !touching && visible && !document.hidden;
@@ -27,6 +32,7 @@ if (carousel) {
 
     function goTo(index) {
         target = (index + slides.length) % slides.length;
+        applyTheme(target);
         const offset = slides[target].getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
         track.scrollTo({ left: offset, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
         scheduleAutoplay();
@@ -37,6 +43,7 @@ if (carousel) {
         active = slides.reduce((closest, slide, index) =>
             Math.abs(slide.getBoundingClientRect().left - left) < Math.abs(slides[closest].getBoundingClientRect().left - left) ? index : closest, 0);
         target = active;
+        applyTheme(active);
         dots.forEach((dot, index) => {
             if (index === active) dot.setAttribute('aria-current', 'true');
             else dot.removeAttribute('aria-current');
@@ -62,6 +69,7 @@ if (carousel) {
         visible = entry.isIntersecting;
         scheduleAutoplay();
     }, { threshold: 0.25 }).observe(carousel);
+    applyTheme(active);
     scheduleAutoplay();
 
     dots.forEach((dot) => dot.addEventListener('click', () => goTo(Number(dot.dataset.slide))));

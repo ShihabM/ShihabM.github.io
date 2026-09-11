@@ -637,11 +637,57 @@ a:hover {
 }
 
 .devices-showcase {
+    --device-ipad-bg: #b8323f;
+    --device-watch-bg: #d6b9ee;
+    --device-imac-bg: #202d3a;
+    --device-tv-bg: #3468b2;
+    --devices-bg: var(--device-ipad-bg);
+    --devices-text: #fff7f8;
+    --devices-muted: #f2d9dc;
+    --devices-accent: #ffc3cb;
+    --devices-dot: rgba(255, 255, 255, 0.48);
+    --devices-dot-active: #fff;
+    --devices-control: rgba(33, 12, 16, 0.72);
+    --devices-control-hover: rgba(33, 12, 16, 0.88);
     position: relative;
     z-index: 1;
     padding: 68px calc(30px + env(safe-area-inset-right)) 72px calc(30px + env(safe-area-inset-left));
-    background: #d2dce6;
-    color: #111;
+    background: var(--devices-bg);
+    color: var(--devices-text);
+    transition: background-color 0.55s ease, color 0.35s ease;
+}
+
+.devices-showcase[data-active-device="1"] {
+    --devices-bg: var(--device-watch-bg);
+    --devices-text: #241d29;
+    --devices-muted: #65546e;
+    --devices-accent: #72448c;
+    --devices-dot: rgba(36, 29, 41, 0.38);
+    --devices-dot-active: #241d29;
+    --devices-control: rgba(36, 29, 41, 0.82);
+    --devices-control-hover: rgba(36, 29, 41, 0.96);
+}
+
+.devices-showcase[data-active-device="2"] {
+    --devices-bg: var(--device-imac-bg);
+    --devices-text: #f3f7fb;
+    --devices-muted: #b6c4d2;
+    --devices-accent: #81b9e4;
+    --devices-dot: rgba(213, 228, 241, 0.42);
+    --devices-dot-active: #eaf5ff;
+    --devices-control: rgba(7, 14, 21, 0.7);
+    --devices-control-hover: rgba(7, 14, 21, 0.9);
+}
+
+.devices-showcase[data-active-device="3"] {
+    --devices-bg: var(--device-tv-bg);
+    --devices-text: #f5f9ff;
+    --devices-muted: #d4e4f7;
+    --devices-accent: #b9dcff;
+    --devices-dot: rgba(235, 245, 255, 0.46);
+    --devices-dot-active: #fff;
+    --devices-control: rgba(12, 31, 61, 0.72);
+    --devices-control-hover: rgba(12, 31, 61, 0.9);
 }
 
 .devices-showcase-inner {
@@ -668,12 +714,13 @@ a:hover {
 
 .devices-eyebrow {
     margin-bottom: 18px;
-    color: #39736d;
+    color: var(--devices-accent);
     font-size: 14px;
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    transition: color 0.35s ease;
 }
 
 .devices-copy h2 {
@@ -687,9 +734,10 @@ a:hover {
 .devices-description {
     max-width: 720px;
     margin: 0 auto;
-    color: #626262;
+    color: var(--devices-muted);
     font-size: clamp(18px, 1.7vw, 24px);
     line-height: 1.48;
+    transition: color 0.35s ease;
 }
 
 .device-track {
@@ -723,10 +771,10 @@ a:hover {
     object-fit: contain;
 }
 
-.device-slide:nth-child(1) { background: #b8323f; }
-.device-slide:nth-child(2) { background: #d6b9ee; }
-.device-slide:nth-child(3) { background: #fff; }
-.device-slide:nth-child(4) { background: #3468b2; }
+.device-slide:nth-child(1) { background: var(--device-ipad-bg); }
+.device-slide:nth-child(2) { background: var(--device-watch-bg); }
+.device-slide:nth-child(3) { background: var(--device-imac-bg); }
+.device-slide:nth-child(4) { background: var(--device-tv-bg); }
 
 /* Keep the original UI pixels over the repaired hardware artwork. */
 .device-slide .device-screen {
@@ -811,12 +859,13 @@ a:hover {
     width: 8px;
     height: 8px;
     border-radius: 999px;
-    background: #686868;
+    background: var(--devices-dot);
+    transition: width 0.2s ease, background-color 0.35s ease;
 }
 
-.device-dot[aria-current="true"]::before { width: 24px; background: #111; }
-.device-arrow { background: #292929; }
-.device-arrow:hover { background: #3b3b3b; }
+.device-dot[aria-current="true"]::before { width: 24px; background: var(--devices-dot-active); }
+.device-arrow { background: var(--devices-control); transition: background-color 0.35s ease; }
+.device-arrow:hover { background: var(--devices-control-hover); }
 .device-arrow svg { width: 22px; height: 22px; }
 .device-track:focus-visible, .device-dot:focus-visible, .device-arrow:focus-visible { outline: 2px solid #9acdc8; outline-offset: 4px; }
 
@@ -2608,6 +2657,11 @@ body.search-fallback-entering .search-page-body {
         animation: none;
     }
 
+    .devices-showcase,
+    .devices-eyebrow,
+    .devices-description,
+    .device-dot::before,
+    .device-arrow,
     .search-launch,
     .search-result-card,
     .search-clear,
