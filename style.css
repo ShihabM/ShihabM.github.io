@@ -325,14 +325,41 @@ a:hover {
 .apple-intelligence-showcase {
     position: relative;
     z-index: 1;
+    isolation: isolate;
     overflow: hidden;
     padding: 60px calc(30px + env(safe-area-inset-right)) 0 calc(30px + env(safe-area-inset-left));
-    background: #101010;
+    background: #11191d;
     color: #f7f7f7;
     text-align: center;
 }
 
+.apple-intelligence-showcase::before,
+.apple-intelligence-showcase::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.apple-intelligence-showcase::before {
+    inset: -14% -10%;
+    background:
+        radial-gradient(ellipse 72% 52% at 50% 94%, rgba(169, 154, 132, 0.96) 0%, rgba(110, 96, 78, 0.7) 34%, rgba(39, 35, 30, 0.2) 64%, transparent 78%),
+        radial-gradient(ellipse 64% 48% at 16% 32%, rgba(73, 108, 122, 0.62) 0%, rgba(30, 53, 62, 0.4) 44%, transparent 72%),
+        radial-gradient(ellipse 58% 44% at 84% 26%, rgba(48, 66, 73, 0.7) 0%, transparent 68%),
+        linear-gradient(180deg, #05090b 0%, #111a1f 48%, #665d50 100%);
+    filter: blur(58px);
+    transform: scale(1.1);
+}
+
+.apple-intelligence-showcase::after {
+    inset: 0;
+    background: linear-gradient(180deg, rgba(2, 5, 7, 0.64) 0%, rgba(7, 10, 12, 0.28) 44%, rgba(20, 18, 15, 0.05) 100%);
+}
+
 .apple-intelligence-showcase-inner {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 1296px;
     margin: 0 auto;
