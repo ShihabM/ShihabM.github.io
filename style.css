@@ -329,6 +329,7 @@ a:hover {
     padding: 36px calc(30px + env(safe-area-inset-right)) 0 calc(30px + env(safe-area-inset-left));
     background: #101010;
     color: #f7f7f7;
+    text-align: center;
 }
 
 .apple-intelligence-showcase-inner {
@@ -338,7 +339,8 @@ a:hover {
 }
 
 .apple-intelligence-copy {
-    max-width: 420px;
+    width: min(100%, 780px);
+    margin: 0 auto;
 }
 
 .apple-intelligence-eyebrow {
@@ -360,6 +362,8 @@ a:hover {
 }
 
 .apple-intelligence-description {
+    max-width: 720px;
+    margin: 0 auto;
     color: #b8b8b8;
     font-size: clamp(18px, 1.7vw, 24px);
     font-weight: 400;
