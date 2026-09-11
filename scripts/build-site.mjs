@@ -18,6 +18,7 @@ const files = [
     "favicon-180.png",
     "favicon-32.png",
     "index.html",
+    "og-hero-v2.png",
     "og.png",
     "phone-mockup.png",
     "privacy",
