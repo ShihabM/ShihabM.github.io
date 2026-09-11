@@ -34,7 +34,7 @@ if (carousel) {
         target = (index + slides.length) % slides.length;
         applyTheme(target);
         const offset = slides[target].getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
-        track.scrollTo({ left: offset, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+        track.scrollTo({ left: offset, behavior: 'auto' });
         scheduleAutoplay();
     }
 

@@ -638,7 +638,7 @@ a:hover {
 
 .devices-showcase {
     --device-ipad-bg: #b8323f;
-    --device-watch-bg: #d6b9ee;
+    --device-watch-bg: #d9c3f1;
     --device-imac-bg: #202d3a;
     --device-tv-bg: #3468b2;
     --devices-bg: var(--device-ipad-bg);
@@ -654,7 +654,6 @@ a:hover {
     padding: 68px calc(30px + env(safe-area-inset-right)) 72px calc(30px + env(safe-area-inset-left));
     background: var(--devices-bg);
     color: var(--devices-text);
-    transition: background-color 0.55s ease, color 0.35s ease;
 }
 
 .devices-showcase[data-active-device="1"] {
@@ -720,7 +719,6 @@ a:hover {
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    transition: color 0.35s ease;
 }
 
 .devices-copy h2 {
@@ -737,7 +735,6 @@ a:hover {
     color: var(--devices-muted);
     font-size: clamp(18px, 1.7vw, 24px);
     line-height: 1.48;
-    transition: color 0.35s ease;
 }
 
 .device-track {
@@ -860,11 +857,10 @@ a:hover {
     height: 8px;
     border-radius: 999px;
     background: var(--devices-dot);
-    transition: width 0.2s ease, background-color 0.35s ease;
 }
 
 .device-dot[aria-current="true"]::before { width: 24px; background: var(--devices-dot-active); }
-.device-arrow { background: var(--devices-control); transition: background-color 0.35s ease; }
+.device-arrow { background: var(--devices-control); }
 .device-arrow:hover { background: var(--devices-control-hover); }
 .device-arrow svg { width: 22px; height: 22px; }
 .device-track:focus-visible, .device-dot:focus-visible, .device-arrow:focus-visible { outline: 2px solid #9acdc8; outline-offset: 4px; }
@@ -2657,11 +2653,6 @@ body.search-fallback-entering .search-page-body {
         animation: none;
     }
 
-    .devices-showcase,
-    .devices-eyebrow,
-    .devices-description,
-    .device-dot::before,
-    .device-arrow,
     .search-launch,
     .search-result-card,
     .search-clear,
