@@ -24,7 +24,8 @@ const files = [
     "privacy",
     "search.js",
     "style.css",
-    "terms"
+    "terms",
+    "x-card-phone-in-hand-v1.png"
 ];
 
 await rm(join(root, "dist"), { recursive: true, force: true });
