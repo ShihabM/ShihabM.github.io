@@ -497,7 +497,7 @@ a:hover {
 
 .apple-intelligence-phone {
     width: min(100%, 480px);
-    aspect-ratio: 1036 / 1190;
+    aspect-ratio: 1261 / 1348;
     overflow: hidden;
 }
 
@@ -1312,6 +1312,11 @@ a:hover {
 
 .search-launch {
     view-transition-name: binge-search-bar;
+}
+
+.search-download-cta {
+    width: max-content;
+    margin: 34px auto 0;
 }
 
 .search-launch:hover {
