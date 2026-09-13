@@ -496,11 +496,14 @@ a:hover {
 }
 
 .apple-intelligence-phone {
+    position: relative;
     width: min(100%, 480px);
-    aspect-ratio: 1261 / 1348;
+    aspect-ratio: 1261 / 1240;
 }
 
 .apple-intelligence-phone img {
+    position: absolute;
+    inset: 0 auto auto 0;
     display: block;
     width: 100%;
     height: auto;
