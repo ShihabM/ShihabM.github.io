@@ -416,6 +416,7 @@ a:hover {
 
 .apple-intelligence-bubble {
     position: relative;
+    isolation: isolate;
     width: fit-content;
     padding: clamp(18px, 2vw, 26px) clamp(23px, 2.7vw, 34px);
     border: 1px solid #686b70;
@@ -454,45 +455,28 @@ a:hover {
     font-weight: 720;
 }
 
-.apple-intelligence-bubble::before,
 .apple-intelligence-bubble::after {
     content: "";
     position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-}
-
-.apple-intelligence-bubble--left::before {
-    bottom: -14px;
-    left: 34px;
-    border-width: 14px 15px 0 0;
-    border-color: #686b70 transparent transparent transparent;
+    z-index: -1;
+    bottom: -18px;
+    width: 54px;
+    height: 34px;
+    background: url("assets/siri-bubble-tail.svg?v=2") center / 100% 100% no-repeat;
+    pointer-events: none;
 }
 
 .apple-intelligence-bubble--left::after {
-    bottom: -12px;
-    left: 35px;
-    border-width: 13px 14px 0 0;
-    border-color: #484b50 transparent transparent transparent;
+    left: -20px;
 }
 
 .apple-intelligence-bubble--right {
     justify-self: end;
 }
 
-.apple-intelligence-bubble--right::before {
-    right: 34px;
-    bottom: -14px;
-    border-width: 14px 0 0 15px;
-    border-color: #686b70 transparent transparent transparent;
-}
-
 .apple-intelligence-bubble--right::after {
-    right: 35px;
-    bottom: -12px;
-    border-width: 13px 0 0 14px;
-    border-color: #484b50 transparent transparent transparent;
+    right: -20px;
+    transform: scaleX(-1);
 }
 
 .apple-intelligence-phone {
@@ -1155,6 +1139,7 @@ a:hover {
     }
 
     .live-activity-image {
+        width: min(88%, 360px);
         margin-top: 12px;
     }
 
@@ -1185,9 +1170,14 @@ a:hover {
     }
 
     .apple-intelligence-bubble:nth-child(3) {
-        grid-column: 1 / span 6;
-        max-width: 94%;
-        transform: translateX(5%) rotate(-0.5deg);
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: max-content;
+        max-width: 100%;
+        padding-right: clamp(16px, 4.5vw, 23px);
+        padding-left: clamp(16px, 4.5vw, 23px);
+        font-size: clamp(16px, 4.8vw, 21px);
+        transform: rotate(-0.5deg);
     }
 
     .apple-intelligence-phone {
