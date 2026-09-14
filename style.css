@@ -458,16 +458,16 @@ a:hover {
 .apple-intelligence-bubble::after {
     content: "";
     position: absolute;
-    z-index: -1;
-    bottom: -18px;
-    width: 54px;
-    height: 34px;
-    background: url("assets/siri-bubble-tail.svg?v=2") center / 100% 100% no-repeat;
+    z-index: 1;
+    bottom: -1px;
+    width: 52px;
+    height: 33px;
+    background: url("assets/siri-bubble-tail.svg?v=3") center / 100% 100% no-repeat;
     pointer-events: none;
 }
 
 .apple-intelligence-bubble--left::after {
-    left: -20px;
+    left: -14px;
 }
 
 .apple-intelligence-bubble--right {
@@ -475,7 +475,7 @@ a:hover {
 }
 
 .apple-intelligence-bubble--right::after {
-    right: -20px;
+    right: -14px;
     transform: scaleX(-1);
 }
 
