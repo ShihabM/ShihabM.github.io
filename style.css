@@ -419,11 +419,10 @@ a:hover {
     isolation: isolate;
     width: fit-content;
     padding: clamp(18px, 2vw, 26px) clamp(23px, 2.7vw, 34px);
-    border: 1px solid #686b70;
     border-radius: clamp(28px, 3vw, 42px);
-    background: #484b50;
+    background: transparent;
     color: #f4f4f6;
-    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(0 18px 19px rgba(0, 0, 0, 0.2));
     font-weight: 400;
     line-height: 1.22;
     letter-spacing: -0.025em;
@@ -455,15 +454,31 @@ a:hover {
     font-weight: 720;
 }
 
+.apple-intelligence-bubble::before,
 .apple-intelligence-bubble::after {
     content: "";
     position: absolute;
-    z-index: 1;
-    bottom: -1px;
+    pointer-events: none;
+}
+
+.apple-intelligence-bubble::before {
+    z-index: -2;
+    inset: 0;
+    border: 1px solid #686b70;
+    border-radius: inherit;
+    background: #484b50;
+}
+
+.apple-intelligence-bubble::after {
+    z-index: -1;
+    bottom: 0;
     width: 52px;
     height: 33px;
     background: url("assets/siri-bubble-tail.svg?v=3") center / 100% 100% no-repeat;
-    pointer-events: none;
+}
+
+.apple-intelligence-bubble--left::before {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 36px 100%, 36px calc(100% - 31px), 0 calc(100% - 31px));
 }
 
 .apple-intelligence-bubble--left::after {
@@ -472,6 +487,10 @@ a:hover {
 
 .apple-intelligence-bubble--right {
     justify-self: end;
+}
+
+.apple-intelligence-bubble--right::before {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 31px), calc(100% - 36px) calc(100% - 31px), calc(100% - 36px) 100%, 0 100%);
 }
 
 .apple-intelligence-bubble--right::after {
