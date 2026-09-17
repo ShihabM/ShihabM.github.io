@@ -1,3 +1,5 @@
+import { fetchRottenTomatoesScores } from "./rotten-tomatoes.js";
+
 const API_PREFIX = "/api/tmdb";
 const TMDB_ORIGIN = "https://api.themoviedb.org";
 const DEFAULT_ALLOWED_ORIGIN = "https://binge.movie";
@@ -35,6 +37,7 @@ const seasonInteger = (value) => /^(?:0|[1-9]\d{0,3})$/.test(value);
 export const createUpstreamURL = (requestURL, apiKey) => {
     const path = requestURL.pathname.slice(API_PREFIX.length);
     const upstream = new URL("/3", TMDB_ORIGIN);
+    let ratings;
 
     const searchMatch = path.match(/^\/search\/(movie|tv)$/);
     if (searchMatch) {
@@ -50,7 +53,17 @@ export const createUpstreamURL = (requestURL, apiKey) => {
     } else {
         const detailMatch = path.match(/^\/(movie|tv)\/([^/]+)$/);
         const seasonMatch = path.match(/^\/tv\/([^/]+)\/season\/([^/]+)$/);
-        if (detailMatch && positiveInteger(detailMatch[2]) && requestURL.search === "") {
+        const ratingsMatch = path.match(/^\/(movie|tv)\/([^/]+)\/ratings$/);
+        if (ratingsMatch && positiveInteger(ratingsMatch[2])) {
+            const kind = ratingsMatch[1];
+            const season = requestURL.searchParams.get("season");
+            const validParameters = kind === "movie" ? requestURL.search === "" :
+                seasonInteger(season || "") && requestURL.searchParams.getAll("season").length === 1 &&
+                [...requestURL.searchParams.keys()].every(key => key === "season");
+            if (!validParameters) return { error: "A valid ratings request is required.", status: 400 };
+            upstream.pathname = `/3/${kind}/${ratingsMatch[2]}`;
+            ratings = { kind, season: kind === "tv" ? Number(season) : null };
+        } else if (detailMatch && positiveInteger(detailMatch[2]) && requestURL.search === "") {
             const kind = detailMatch[1];
             upstream.pathname = `/3/${kind}/${detailMatch[2]}`;
             upstream.searchParams.set(
@@ -73,7 +86,7 @@ export const createUpstreamURL = (requestURL, apiKey) => {
 
     upstream.searchParams.set("language", "en-US");
     upstream.searchParams.set("api_key", apiKey);
-    return { url: upstream };
+    return { url: upstream, ...(ratings ? { ratings } : {}) };
 };
 
 const rateLimitKey = (request, requestURL) => {
@@ -119,6 +132,7 @@ export const handleRequest = async (request, env, fetchImpl = fetch, { cache = g
         const isSearch = requestURL.pathname.includes("/search/");
         const cacheURL = new URL(requestURL.pathname, requestURL.origin);
         if (isSearch) cacheURL.searchParams.set("query", target.url.searchParams.get("query"));
+        if (target.ratings?.kind === "tv") cacheURL.searchParams.set("season", String(target.ratings.season));
         const cacheRequest = new Request(cacheURL);
         const cached = await cache?.match(cacheRequest).catch(() => undefined);
         if (cached) {
@@ -137,7 +151,17 @@ export const handleRequest = async (request, env, fetchImpl = fetch, { cache = g
             const status = upstreamResponse.status === 404 ? 404 : 502;
             return json({ error: "Movie data is temporarily unavailable." }, status, cors);
         }
-        const body = await upstreamResponse.arrayBuffer();
+        let body;
+        if (target.ratings) {
+            const details = await upstreamResponse.json();
+            const scores = await fetchRottenTomatoesScores(details, target.ratings.kind, target.ratings.season, fetchImpl);
+            if (!scores.critics && !scores.audience) {
+                return json({ error: "Rotten Tomatoes scores are temporarily unavailable." }, 502, cors);
+            }
+            body = JSON.stringify(scores);
+        } else {
+            body = await upstreamResponse.arrayBuffer();
+        }
         const response = new Response(body, {
             status: upstreamResponse.status,
             headers: {

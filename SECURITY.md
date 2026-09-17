@@ -24,7 +24,7 @@ The marketing site remains on GitHub Pages at `https://binge.movie`. The `binge-
 
 For a local development preview, temporarily set the meta tag to `/api/tmdb` before running `npm run dev`; do not commit that local change.
 
-The Worker accepts only movie/show searches, movie/show details, and TV season details. It fixes TMDB parameters server-side, rejects arbitrary API paths, restricts browser origins, caches read responses, and applies the configured Cloudflare rate-limit binding.
+The Worker accepts only movie/show searches, movie/show details, TV season details, and Rotten Tomatoes ratings for a TMDB movie/show ID. Ratings URLs are constructed from server-fetched TMDB metadata; clients cannot choose an upstream URL. TV ratings require a season number and use a separate cache entry for each season. Rotten Tomatoes redirects stay on its own origin. The Worker fixes TMDB parameters server-side, rejects arbitrary API paths, restricts browser origins, caches successful read responses, and applies the configured Cloudflare rate-limit binding.
 
 The limit is 60 requests per minute per client IP and request class (search or details), per Cloudflare location. These counters are approximate, and shared IP addresses share the allowance. CORS is browser policy, not authentication: clients outside a browser can still call the public, rate-limited endpoints. Missing or failed rate-limit configuration fails closed. Upstream errors are not cached or returned verbatim.
 
