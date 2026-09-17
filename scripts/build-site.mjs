@@ -12,6 +12,7 @@ const files = [
     "assets",
     "devices.js",
     "widgets.js",
+    "testimonials.js",
     "download.svg",
     "favicon-16.png",
     "favicon-180.png",
