@@ -1278,7 +1278,11 @@ a:hover {
 
 .testimonials-showcase {
     padding-top: clamp(60px, 7vw, 96px);
-    padding-bottom: 16px;
+    padding-bottom: 0;
+}
+
+.testimonials-showcase + .search-invitation {
+    padding-top: 24px;
 }
 
 .testimonials-inner {
