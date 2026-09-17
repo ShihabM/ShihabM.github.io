@@ -10,6 +10,7 @@ const files = [
     ".well-known",
     "IconRounded.png",
     "assets",
+    "cursor.js",
     "devices.js",
     "widgets.js",
     "download.svg",
