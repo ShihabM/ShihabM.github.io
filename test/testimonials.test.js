@@ -118,7 +118,7 @@ test('slider supports keyboard half-star steps and accessible endpoints', () => 
     assert.equal(s.key('Tab'), false);
 });
 
-test('all 19 testimonials cycle in order every two seconds and loop', () => {
+test('all 19 testimonials cycle in order every three seconds and loop', () => {
     const s = setup();
     assert.equal(titles.length, 19);
     assert.equal(titles[0], 'BEST APP EVER');
@@ -126,7 +126,7 @@ test('all 19 testimonials cycle in order every two seconds and loop', () => {
     for (let index = 0; index < 38; index++) {
         assert.equal(s.quotes.filter(quote => quote.dataset.active === 'true').length, 1);
         assert.equal(s.quotes[index % 19].dataset.active, 'true');
-        assert.equal([...s.timers.values()][0].delay, 2000);
+        assert.equal([...s.timers.values()][0].delay, 3000);
         s.tick();
     }
     assert.equal(s.quotes[0].dataset.active, 'true');

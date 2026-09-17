@@ -89,7 +89,7 @@
             quotes[activeQuote].dataset.active = 'true';
             quotes[activeQuote].removeAttribute('aria-hidden');
             scheduleQuote();
-        }, 2000);
+        }, 3000);
     }
 
     reducedMotion.addEventListener('change', scheduleQuote);
