@@ -3,7 +3,9 @@
 
     const TMDB_API_BASE = document.querySelector('meta[name="binge-api-base"]')?.content || "/api/tmdb";
     const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p";
-    const SEARCH_DELAY = 350;
+    const SEARCH_DELAY = 220;
+    const SEARCH_CACHE_TTL = 2 * 60 * 1000;
+    const SEARCH_CACHE_LIMIT = 20;
 
     const launchButton = document.querySelector("#search-launch");
     const searchExperience = document.querySelector("#search-experience");
@@ -33,12 +35,18 @@
     let ratingHydrationVersion = 0;
     let detailTintVersion = 0;
     let allResults = [];
+    let resultsQuery = "";
+    let renderedResults = null;
+    let pendingQuery = "";
+    let isSearching = false;
+    let showingSkeletons = false;
     let activeFilter = "all";
     let lastScrollPosition = 0;
     let suppressDetailLocationSync = false;
     const defaultDocumentTitle = document.title;
     const externalRatingCache = new Map();
     const seasonCache = new Map();
+    const searchCache = new Map();
 
     const escapeHTML = (value = "") => String(value)
         .replaceAll("&", "&amp;")
@@ -198,8 +206,26 @@
         renderResults();
     };
 
+    const setSearchBusy = (busy) => {
+        isSearching = busy;
+        resultsContainer.setAttribute("aria-busy", String(busy));
+    };
+
+    const cachedSearch = (query) => {
+        const cached = searchCache.get(query);
+        if (!cached) return null;
+        if (Date.now() - cached.time > SEARCH_CACHE_TTL) {
+            searchCache.delete(query);
+            return null;
+        }
+        return cached.results;
+    };
+
     const renderSkeletons = () => {
-        resultsContainer.replaceChildren();
+        // Keep existing posters stable while a replacement query is in flight.
+        if (allResults.length || showingSkeletons) return;
+        showingSkeletons = true;
+        renderedResults = null;
         const fragment = document.createDocumentFragment();
         for (let index = 0; index < 18; index += 1) {
             const skeleton = document.createElement("div");
@@ -207,7 +233,7 @@
             skeleton.setAttribute("aria-hidden", "true");
             fragment.append(skeleton);
         }
-        resultsContainer.append(fragment);
+        resultsContainer.replaceChildren(fragment);
         setStatus("Searching TMDB…", false);
     };
 
@@ -217,13 +243,18 @@
         const year = mediaYear(item);
         const kind = item.media_type === "movie" ? "Movie" : "Show";
         button.className = "search-result-card";
+        button.dataset.mediaType = item.media_type;
         button.type = "button";
         button.setAttribute("aria-label", `View ${title}${year ? ` (${year})` : ""} details`);
         button.title = `${title}${year ? ` (${year})` : ""}`;
 
-        const poster = imageURL(item.poster_path);
+        const poster = imageURL(item.poster_path, "w342");
         if (poster) {
             const image = document.createElement("img");
+            image.srcset = [185, 342, 500, 780]
+                .map((width) => `${imageURL(item.poster_path, `w${width}`)} ${width}w`)
+                .join(", ");
+            image.sizes = "(max-width: 720px) calc((100vw - 48px) / 3), 180px";
             image.src = poster;
             image.alt = `${title} poster`;
             image.loading = "lazy";
@@ -245,19 +276,37 @@
     };
 
     function renderResults() {
-        resultsContainer.replaceChildren();
-        const query = searchInput.value.trim();
+        if (isSearching && !allResults.length) {
+            renderSkeletons();
+            return;
+        }
+        const query = resultsQuery;
         const filtered = activeFilter === "all"
             ? allResults
             : allResults.filter((item) => item.media_type === activeFilter);
 
         if (!query) {
+            resultsContainer.replaceChildren();
+            renderedResults = null;
+            showingSkeletons = false;
             resultsTitle.textContent = "Movies & Shows";
             setStatus("Search for a movie or show to see it here.");
             return;
         }
 
         resultsTitle.textContent = `Results for “${query}”`;
+        // Filtering only changes visibility; it does not recreate or decode posters.
+        if (renderedResults !== allResults) {
+            const fragment = document.createDocumentFragment();
+            allResults.forEach((item) => fragment.append(resultButton(item)));
+            resultsContainer.replaceChildren(fragment);
+            renderedResults = allResults;
+            showingSkeletons = false;
+        }
+        [...resultsContainer.children].forEach((button) => {
+            button.hidden = activeFilter !== "all" && button.dataset.mediaType !== activeFilter;
+        });
+
         if (!filtered.length) {
             const label = activeFilter === "movie" ? "movies" : activeFilter === "tv" ? "shows" : "movies or shows";
             setStatus(`No ${label} found for “${query}”.`);
@@ -265,25 +314,37 @@
         }
 
         setStatus(`${filtered.length} result${filtered.length === 1 ? "" : "s"} found.`, false);
-        const fragment = document.createDocumentFragment();
-        filtered.forEach((item) => fragment.append(resultButton(item)));
-        resultsContainer.append(fragment);
     }
 
     const searchTMDB = async () => {
         const query = searchInput.value.trim();
+        if (searchRequest && !searchRequest.signal.aborted && pendingQuery === query) return;
         searchRequest?.abort();
-        allResults = [];
+        searchRequest = null;
 
         if (!query) {
+            allResults = [];
+            resultsQuery = "";
+            setSearchBusy(false);
+            renderResults();
+            return;
+        }
+
+        const cached = cachedSearch(query);
+        if (cached) {
+            allResults = cached;
+            resultsQuery = query;
+            setSearchBusy(false);
             renderResults();
             return;
         }
 
         const request = new AbortController();
         searchRequest = request;
+        pendingQuery = query;
+        setSearchBusy(true);
         renderSkeletons();
-        resultsTitle.textContent = `Results for “${query}”`;
+        if (!allResults.length) resultsTitle.textContent = `Results for “${query}”`;
 
         try {
             const parameters = { query };
@@ -318,24 +379,47 @@
                 })
                 .slice(0, 40);
 
+            resultsQuery = query;
+            // A partial response stays retryable rather than entering the cache.
+            if (movieResponse.status === "fulfilled" && showResponse.status === "fulfilled") {
+                searchCache.delete(query);
+                searchCache.set(query, { results: allResults, time: Date.now() });
+                if (searchCache.size > SEARCH_CACHE_LIMIT) {
+                    searchCache.delete(searchCache.keys().next().value);
+                }
+            }
+            setSearchBusy(false);
             renderResults();
         } catch (error) {
-            if (error?.name === "AbortError") return;
+            if (error?.name === "AbortError" || request.signal.aborted || searchRequest !== request) return;
             resultsContainer.replaceChildren();
+            allResults = [];
+            resultsQuery = query;
+            renderedResults = null;
+            showingSkeletons = false;
+            resultsTitle.textContent = `Results for “${query}”`;
             setStatus("Binge couldn’t reach TMDB. Please try again in a moment.");
+        } finally {
+            if (searchRequest === request) {
+                searchRequest = null;
+                setSearchBusy(false);
+            }
         }
     };
 
     const queueSearch = () => {
         window.clearTimeout(searchTimer);
-        searchRequest?.abort();
         updateInputState();
-        if (!searchInput.value.trim()) {
-            allResults = [];
-            renderResults();
+        const query = searchInput.value.trim();
+        if (searchRequest && !searchRequest.signal.aborted && pendingQuery === query) return;
+        searchRequest?.abort();
+        searchRequest = null;
+        setSearchBusy(false);
+        if (!query || cachedSearch(query)) {
+            void searchTMDB();
             return;
         }
-        renderSkeletons();
+        // Typing only resets a timer; build the loading grid after the debounce.
         searchTimer = window.setTimeout(searchTMDB, SEARCH_DELAY);
     };
 
@@ -982,6 +1066,8 @@
         if (mediaDialog.open) mediaDialog.close();
         searchInput.value = "";
         allResults = [];
+        resultsQuery = "";
+        setSearchBusy(false);
         setFilter("all");
         updateInputState();
         if (typeof document.startViewTransition === "function" && !prefersReducedMotion.matches) {
