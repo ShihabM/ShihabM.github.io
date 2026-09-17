@@ -1413,9 +1413,7 @@ body.search-active .search-experience {
     min-height: 104px;
     padding: 18px max(22px, calc(22px + env(safe-area-inset-right))) 18px max(22px, calc(22px + env(safe-area-inset-left)));
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(16, 16, 16, 0.88);
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
-    backdrop-filter: blur(24px) saturate(150%);
+    background: #101010;
 }
 
 .search-form {
@@ -1656,13 +1654,18 @@ body.search-fallback-entering .search-page-body {
     background: #1c1c1e;
     color: #d2d2d7;
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.26);
-    transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    contain: layout paint;
+    content-visibility: auto;
+    transition: border-color 0.18s ease;
+}
+
+.search-result-card[hidden] {
+    display: none;
 }
 
 .search-result-card:hover {
     z-index: 2;
     border-color: rgba(29, 161, 242, 0.74);
-    box-shadow: 0 24px 44px rgba(0, 0, 0, 0.42);
 }
 
 .search-result-card img {
@@ -1693,9 +1696,7 @@ body.search-fallback-entering .search-page-body {
     padding: 5px 8px;
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
-    background: rgba(15, 15, 16, 0.8);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: rgba(15, 15, 16, 0.92);
     color: #fff;
     font-size: 10px;
     font-weight: 750;
@@ -1706,8 +1707,7 @@ body.search-fallback-entering .search-page-body {
 .search-result-card.is-skeleton {
     border: 0;
     background: linear-gradient(100deg, #1c1c1e 25%, #29292c 44%, #1c1c1e 63%);
-    background-size: 300% 100%;
-    animation: search-shimmer 1.35s ease-in-out infinite;
+    box-shadow: none;
 }
 
 @keyframes search-shimmer {
@@ -2707,38 +2707,19 @@ html body [onclick]:not([aria-disabled="true"]) * {
     pointer-events: none !important;
 }
 
-.site-hand-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 2147483647;
-    width: 32px;
-    height: 32px;
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-    background: url("/assets/hand-cursor.png?v=1") center / 32px 32px no-repeat;
-    contain: strict;
-    will-change: transform;
-}
-
-.site-hand-cursor.is-visible {
-    visibility: visible;
-    opacity: 1;
-}
-
 @media (any-hover: hover) and (any-pointer: fine) {
-    html.site-hand-cursor-ready body a[href],
-    html.site-hand-cursor-ready body button:not(:disabled),
-    html.site-hand-cursor-ready body input[type="button"]:not(:disabled),
-    html.site-hand-cursor-ready body input[type="submit"]:not(:disabled),
-    html.site-hand-cursor-ready body input[type="reset"]:not(:disabled),
-    html.site-hand-cursor-ready body select:not(:disabled),
-    html.site-hand-cursor-ready body summary,
-    html.site-hand-cursor-ready body label[for],
-    html.site-hand-cursor-ready body [role="button"]:not([aria-disabled="true"]),
-    html.site-hand-cursor-ready body [onclick]:not([aria-disabled="true"]) {
-        cursor: none !important;
+    /* Let the browser move the same hand graphic independently of page rendering. */
+    html body a[href],
+    html body button:not(:disabled),
+    html body input[type="button"]:not(:disabled),
+    html body input[type="submit"]:not(:disabled),
+    html body input[type="reset"]:not(:disabled),
+    html body select:not(:disabled),
+    html body summary,
+    html body label[for],
+    html body [role="button"]:not([aria-disabled="true"]),
+    html body [onclick]:not([aria-disabled="true"]) {
+        cursor: url("/assets/hand-cursor.png?v=1") 12 8, pointer !important;
     }
 }
 
