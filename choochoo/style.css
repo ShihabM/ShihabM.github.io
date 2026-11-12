@@ -99,10 +99,18 @@ main {
 }
 
 h1 {
+    width: 100%;
     margin: calc(24px + var(--copy-offset) + clamp(12px, (100vh - 640px) / 5, 32px)) 0 0;
     font-size: clamp(2.5rem, 9vw, 4rem);
     line-height: 1.05;
-    letter-spacing: -0.055em;
+}
+
+.wordmark {
+    display: block;
+    width: 4.5em;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
 }
 
 h1 span {
