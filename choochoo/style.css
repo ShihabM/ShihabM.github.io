@@ -2,6 +2,7 @@
     font-family: system-ui, sans-serif;
     color: #222d35;
     background: #f4f0e8;
+    overscroll-behavior-y: none;
 }
 
 body {
@@ -176,11 +177,16 @@ body {
 }
 
 .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 4px clamp(6px, 2vw, 12px);
     padding-top: 20px;
 }
 
 .site-footer .footer-copyright {
-    margin: 4px 0 0;
+    margin: 0;
     color: #64686c;
     font-size: 0.8125rem;
     line-height: 1.4;
@@ -196,7 +202,7 @@ body {
 }
 
 .site-footer a {
-    padding: 8px;
+    padding: 8px clamp(4px, 1.4vw, 8px);
     color: #64686c;
     font-size: 0.8125rem;
     text-decoration: none;
