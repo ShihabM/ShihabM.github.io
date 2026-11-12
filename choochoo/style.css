@@ -23,7 +23,7 @@ main {
     justify-items: center;
     width: 100%;
     max-width: 420px;
-    /* Keep the icon in place as the gap above the title grows. */
+    /* Balance the base gap above the title when centering the artwork. */
     margin-block-start: var(--copy-offset);
     text-align: center;
 }
@@ -99,7 +99,7 @@ main {
 }
 
 h1 {
-    margin: calc(24px + var(--copy-offset)) 0 0;
+    margin: calc(24px + var(--copy-offset) + clamp(12px, (100vh - 640px) / 5, 32px)) 0 0;
     font-size: clamp(2.5rem, 9vw, 4rem);
     line-height: 1.05;
     letter-spacing: -0.055em;
