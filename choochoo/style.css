@@ -9,7 +9,7 @@ body {
     min-height: 100vh;
     min-height: 100svh;
     margin: 0;
-    padding: 32px 24px;
+    padding: 16px 24px;
     overflow-x: clip;
     display: grid;
     place-items: center;
@@ -17,7 +17,7 @@ body {
 }
 
 main {
-    --copy-offset: clamp(32px, 9.5vh, 68px);
+    --copy-offset: clamp(44px, 13vh, 92px);
     isolation: isolate;
     display: grid;
     justify-items: center;
@@ -42,14 +42,14 @@ main {
     overflow: hidden;
     transform: translate(-50%, -52%);
     pointer-events: none;
-    opacity: 0.66;
+    opacity: 0.82;
     mask-image:
         /* Upper left */
-        radial-gradient(ellipse 19% 22% at 29% 33%, #000 25%, transparent 100%),
+        radial-gradient(ellipse 19% 22% at 29% 33%, #000 45%, transparent 100%),
         radial-gradient(ellipse 12% 15% at 21% 39%, #000d 18%, transparent 100%),
         radial-gradient(ellipse 13% 16% at 35% 21%, #000c 14%, transparent 100%),
         /* Lower right */
-        radial-gradient(ellipse 20% 22% at 69% 66%, #000 25%, transparent 100%),
+        radial-gradient(ellipse 20% 22% at 69% 66%, #000 45%, transparent 100%),
         radial-gradient(ellipse 13% 16% at 78% 59%, #000d 18%, transparent 100%),
         radial-gradient(ellipse 13% 16% at 64% 79%, #000c 14%, transparent 100%);
     mask-size: 100% 100%;
@@ -58,12 +58,14 @@ main {
 }
 
 .board-backdrop img {
+    position: absolute;
+    inset: -4.5%;
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 109%;
+    height: 109%;
     object-fit: cover;
     object-position: center 44%;
-    transform: scale(1.095);
+    filter: contrast(1.1);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -84,8 +86,8 @@ main {
 }
 
 @keyframes drift-board {
-    from { transform: translate(-7px, 3px) rotate(-1deg) scale(1.08); }
-    to { transform: translate(9px, -5px) rotate(1deg) scale(1.11); }
+    from { transform: translate(-7px, 3px); }
+    to { transform: translate(9px, -5px); }
 }
 
 .app-icon {
@@ -93,7 +95,7 @@ main {
     width: clamp(128px, 34vw, 176px);
     height: auto;
     border-radius: 22%;
-    box-shadow: 0 0 0 1px #222d351a, 0 5px 14px #24263824, 0 22px 60px 12px #24263847;
+    box-shadow: 0 0 0 1px #222d351a, 0 5px 14px #24263824, 0 24px 78px 18px #24263847;
 }
 
 h1 {
