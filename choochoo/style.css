@@ -17,7 +17,7 @@ body {
 }
 
 main {
-    --copy-offset: clamp(18px, 5vh, 36px);
+    --copy-offset: clamp(32px, 9.5vh, 68px);
     isolation: isolate;
     display: grid;
     justify-items: center;
@@ -93,7 +93,7 @@ main {
     width: clamp(128px, 34vw, 176px);
     height: auto;
     border-radius: 22%;
-    box-shadow: 0 0 0 1px #222d351a, 0 4px 10px #2426381c, 0 18px 48px 8px #24263830;
+    box-shadow: 0 0 0 1px #222d351a, 0 5px 14px #24263824, 0 22px 60px 12px #24263847;
 }
 
 h1 {
