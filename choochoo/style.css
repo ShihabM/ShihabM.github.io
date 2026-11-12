@@ -36,18 +36,27 @@ body {
     position: relative;
 }
 
-.app-artwork::before {
+.app-artwork::before,
+.app-artwork::after {
     content: "";
     position: absolute;
-    inset: -38%;
-    transform: translateY(6px);
     pointer-events: none;
-    background:
-        radial-gradient(ellipse 34% 31% at 43% 27%, #f5a9ba59, transparent 100%),
-        radial-gradient(ellipse 33% 34% at 72% 33%, #8dc6ff70, transparent 100%),
-        radial-gradient(ellipse 31% 34% at 25% 54%, #9adcaa73, transparent 100%),
-        radial-gradient(ellipse 37% 33% at 44% 77%, #b8a1f579, transparent 100%),
-        radial-gradient(ellipse 29% 31% at 72% 68%, #f7d99866, transparent 100%);
+    filter: blur(clamp(18px, 4.5vw, 26px));
+    opacity: 0.65;
+}
+
+.app-artwork::before {
+    inset: -12% -33% 39% -14%;
+    border-radius: 63% 37% 58% 42% / 58% 44% 56% 42%;
+    background: linear-gradient(112deg, #ffd4a6, #ffc1d6 44%, #a5d9ff 82%);
+    transform: rotate(-12deg);
+}
+
+.app-artwork::after {
+    inset: 46% -26% -32% -32%;
+    border-radius: 42% 58% 67% 33% / 55% 55% 45% 45%;
+    background: linear-gradient(104deg, #b8efce, #cec0ff 53%, #ffe4a8 89%);
+    transform: rotate(10deg);
 }
 
 .board-backdrop {
@@ -110,11 +119,12 @@ body {
 
 .app-icon {
     position: relative;
+    z-index: 1;
     display: block;
     width: clamp(128px, 34vw, 176px);
     height: auto;
     border-radius: 22%;
-    box-shadow: 0 0 0 1px #222d351a, 0 7px 14px #24263827, 0 30px 78px 18px #2426384d;
+    box-shadow: 0 0 0 1px #222d351a, 0 7px 14px #24263827, 0 30px 72px 12px #4e3d6b27;
 }
 
 .landing-page h1 {
@@ -171,6 +181,8 @@ body {
 
 .site-footer nav {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
     gap: 4px;
 }
@@ -186,6 +198,22 @@ body {
 .site-footer a[aria-current="page"] {
     text-decoration: underline;
     text-underline-offset: 0.2em;
+}
+
+.site-footer .footer-social-link {
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-social-link svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+.site-footer .footer-social-link:hover {
+    color: #222d35;
 }
 
 .legal-page {
