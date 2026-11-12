@@ -125,10 +125,18 @@ p {
     display: inline-block;
     margin-top: 24px;
     border-radius: 6px;
+    cursor: pointer;
 }
 
 .app-store img {
     display: block;
+    pointer-events: none;
+}
+
+@media (any-hover: hover) and (any-pointer: fine) {
+    .app-store {
+        cursor: url("/assets/hand-cursor.png?v=1") 12 8, pointer;
+    }
 }
 
 .app-store:focus-visible {
