@@ -34,20 +34,25 @@ main {
     z-index: -1;
     top: 50%;
     left: 50%;
-    width: clamp(390px, 88vw, 720px);
-    height: clamp(250px, 53vw, 420px);
+    width: min(100vw, 900px);
+    height: clamp(315px, 67vw, 540px);
     overflow: hidden;
-    transform: translate(-50%, -53%);
+    transform: translate(-50%, -52%);
     pointer-events: none;
-    opacity: 0.62;
+    opacity: 0.66;
     mask-image:
-        radial-gradient(ellipse 25% 31% at 22% 41%, #000 16%, transparent 100%),
-        radial-gradient(ellipse 21% 24% at 33% 28%, #000 18%, transparent 100%),
-        radial-gradient(ellipse 20% 32% at 42% 57%, #000 22%, transparent 100%),
-        radial-gradient(ellipse 24% 36% at 57% 43%, #000 25%, transparent 100%),
-        radial-gradient(ellipse 24% 27% at 71% 59%, #000 21%, transparent 100%),
-        radial-gradient(ellipse 21% 23% at 81% 45%, #000 10%, transparent 100%),
-        radial-gradient(ellipse 12% 14% at 70% 26%, #0009 8%, transparent 100%);
+        radial-gradient(ellipse 19% 22% at 17% 48%, #000c 17%, transparent 100%),
+        radial-gradient(ellipse 15% 19% at 26% 35%, #000 22%, transparent 100%),
+        radial-gradient(ellipse 14% 21% at 34% 25%, #000 20%, transparent 100%),
+        radial-gradient(ellipse 10% 12% at 45% 15%, #000b 10%, transparent 100%),
+        radial-gradient(ellipse 25% 32% at 49% 47%, #000 25%, transparent 100%),
+        radial-gradient(ellipse 14% 21% at 32% 67%, #000d 15%, transparent 100%),
+        radial-gradient(ellipse 13% 16% at 41% 80%, #000b 12%, transparent 100%),
+        radial-gradient(ellipse 21% 25% at 65% 63%, #000 22%, transparent 100%),
+        radial-gradient(ellipse 12% 17% at 65% 80%, #000a 10%, transparent 100%),
+        radial-gradient(ellipse 19% 24% at 77% 44%, #000 19%, transparent 100%),
+        radial-gradient(ellipse 12% 14% at 70% 24%, #000c 11%, transparent 100%),
+        radial-gradient(ellipse 11% 15% at 85% 61%, #0009 10%, transparent 100%);
     mask-size: 100% 100%;
     mask-position: center;
     mask-repeat: no-repeat;
@@ -59,6 +64,7 @@ main {
     height: 100%;
     object-fit: cover;
     object-position: center 44%;
+    transform: scale(1.095);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -79,8 +85,8 @@ main {
 }
 
 @keyframes drift-board {
-    from { transform: translate(-7px, 3px) rotate(-1deg) scale(1.04); }
-    to { transform: translate(9px, -5px) rotate(1deg) scale(1.07); }
+    from { transform: translate(-7px, 3px) rotate(-1deg) scale(1.08); }
+    to { transform: translate(9px, -5px) rotate(1deg) scale(1.11); }
 }
 
 .app-icon {
