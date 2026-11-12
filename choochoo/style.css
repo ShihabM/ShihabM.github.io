@@ -90,7 +90,7 @@ main {
     width: clamp(128px, 34vw, 176px);
     height: auto;
     border-radius: 22%;
-    box-shadow: 0 0 0 1px #222d351a, 0 16px 32px #302a2020;
+    box-shadow: 0 0 0 1px #222d351a, 0 3px 7px #24263818, 0 16px 30px #24263828;
 }
 
 h1 {
