@@ -103,6 +103,13 @@ h1 {
     letter-spacing: -0.055em;
 }
 
+h1 span {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.64em;
+    letter-spacing: -0.035em;
+}
+
 p {
     margin: 28px 0 0;
     color: #4c5964;
