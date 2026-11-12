@@ -41,18 +41,14 @@ main {
     pointer-events: none;
     opacity: 0.66;
     mask-image:
-        radial-gradient(ellipse 19% 22% at 17% 48%, #000c 17%, transparent 100%),
-        radial-gradient(ellipse 15% 19% at 26% 35%, #000 22%, transparent 100%),
-        radial-gradient(ellipse 14% 21% at 34% 25%, #000 20%, transparent 100%),
-        radial-gradient(ellipse 10% 12% at 45% 15%, #000b 10%, transparent 100%),
-        radial-gradient(ellipse 25% 32% at 49% 47%, #000 25%, transparent 100%),
-        radial-gradient(ellipse 14% 21% at 32% 67%, #000d 15%, transparent 100%),
-        radial-gradient(ellipse 13% 16% at 41% 80%, #000b 12%, transparent 100%),
-        radial-gradient(ellipse 21% 25% at 65% 63%, #000 22%, transparent 100%),
-        radial-gradient(ellipse 12% 17% at 65% 80%, #000a 10%, transparent 100%),
-        radial-gradient(ellipse 19% 24% at 77% 44%, #000 19%, transparent 100%),
-        radial-gradient(ellipse 12% 14% at 70% 24%, #000c 11%, transparent 100%),
-        radial-gradient(ellipse 11% 15% at 85% 61%, #0009 10%, transparent 100%);
+        /* Upper left */
+        radial-gradient(ellipse 19% 22% at 29% 33%, #000 25%, transparent 100%),
+        radial-gradient(ellipse 12% 15% at 21% 39%, #000d 18%, transparent 100%),
+        radial-gradient(ellipse 13% 16% at 35% 21%, #000c 14%, transparent 100%),
+        /* Lower right */
+        radial-gradient(ellipse 20% 22% at 69% 66%, #000 25%, transparent 100%),
+        radial-gradient(ellipse 13% 16% at 78% 59%, #000d 18%, transparent 100%),
+        radial-gradient(ellipse 13% 16% at 64% 79%, #000c 14%, transparent 100%);
     mask-size: 100% 100%;
     mask-position: center;
     mask-repeat: no-repeat;
@@ -105,7 +101,7 @@ h1 {
 }
 
 p {
-    margin: 14px 0 0;
+    margin: 28px 0 0;
     color: #4c5964;
     font-size: clamp(1rem, 3vw, 1.125rem);
     line-height: 1.6;
