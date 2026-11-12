@@ -1,0 +1,62 @@
+:root {
+    font-family: system-ui, sans-serif;
+    color: #222d35;
+    background: #f4f0e8;
+}
+
+body {
+    box-sizing: border-box;
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0;
+    padding: 32px 24px;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(ellipse at 50% 32%, #fffdf8, #f4f0e8 75%);
+}
+
+main {
+    display: grid;
+    justify-items: center;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.app-icon {
+    display: block;
+    width: clamp(128px, 34vw, 176px);
+    height: auto;
+    border-radius: 22%;
+    box-shadow: 0 0 0 1px #222d351a, 0 16px 32px #302a2020;
+}
+
+h1 {
+    margin: 24px 0 0;
+    font-size: clamp(2.5rem, 9vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.055em;
+}
+
+p {
+    margin: 14px 0 0;
+    color: #4c5964;
+    font-size: clamp(1rem, 3vw, 1.125rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+.app-store {
+    display: inline-block;
+    margin-top: 24px;
+    border-radius: 6px;
+}
+
+.app-store img {
+    display: block;
+}
+
+.app-store:focus-visible {
+    outline: 2px solid #285e9b;
+    outline-offset: 4px;
+}
