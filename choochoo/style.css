@@ -16,7 +16,11 @@ body {
     background: radial-gradient(ellipse at 50% 32%, #fffdf8, #f4f0e8 75%);
 }
 
-main {
+.landing-page {
+    grid-template-rows: 1fr auto;
+}
+
+.landing-page main {
     --copy-offset: clamp(44px, 13vh, 92px);
     isolation: isolate;
     display: grid;
@@ -36,6 +40,7 @@ main {
     content: "";
     position: absolute;
     inset: -38%;
+    transform: translateY(6px);
     pointer-events: none;
     background:
         radial-gradient(ellipse 34% 31% at 43% 27%, #f5a9ba59, transparent 100%),
@@ -109,10 +114,10 @@ main {
     width: clamp(128px, 34vw, 176px);
     height: auto;
     border-radius: 22%;
-    box-shadow: 0 0 0 1px #222d351a, 0 5px 14px #24263824, 0 24px 78px 18px #24263847;
+    box-shadow: 0 0 0 1px #222d351a, 0 7px 14px #24263827, 0 30px 78px 18px #2426384d;
 }
 
-h1 {
+.landing-page h1 {
     width: 100%;
     margin: calc(24px + var(--copy-offset) + clamp(12px, (100vh - 640px) / 5, 32px)) 0 0;
     font-size: clamp(2.5rem, 9vw, 4rem);
@@ -127,7 +132,7 @@ h1 {
     margin-inline: auto;
 }
 
-p {
+.landing-page p {
     margin: 28px 0 0;
     color: #4c5964;
     font-size: clamp(1rem, 3vw, 1.125rem);
@@ -148,7 +153,9 @@ p {
 }
 
 @media (any-hover: hover) and (any-pointer: fine) {
-    .app-store {
+    .app-store,
+    .site-footer a,
+    .legal-page a {
         cursor: url("/assets/hand-cursor.png?v=1") 12 8, pointer;
     }
 }
@@ -156,4 +163,72 @@ p {
 .app-store:focus-visible {
     outline: 2px solid #285e9b;
     outline-offset: 4px;
+}
+
+.site-footer {
+    padding-top: 20px;
+}
+
+.site-footer nav {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.site-footer a {
+    padding: 8px;
+    color: #64686c;
+    font-size: 0.8125rem;
+    text-decoration: none;
+}
+
+.site-footer a:hover,
+.site-footer a[aria-current="page"] {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.legal-page {
+    grid-template-rows: auto 1fr auto;
+    align-items: start;
+    padding-block-start: 32px;
+}
+
+.legal-page header,
+.legal-page main {
+    width: min(100%, 640px);
+}
+
+.legal-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: inherit;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.legal-home img {
+    border-radius: 22%;
+}
+
+.legal-page main {
+    padding-block: 28px 36px;
+    line-height: 1.6;
+}
+
+.legal-page h1 {
+    margin: 0 0 20px;
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+}
+
+.legal-page p {
+    margin: 0 0 16px;
+}
+
+.legal-page main a {
+    color: #285e9b;
+    text-underline-offset: 0.2em;
 }
