@@ -179,6 +179,14 @@ body {
     padding-top: 20px;
 }
 
+.site-footer .footer-copyright {
+    margin: 4px 0 0;
+    color: #64686c;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    text-align: center;
+}
+
 .site-footer nav {
     display: flex;
     flex-wrap: wrap;
