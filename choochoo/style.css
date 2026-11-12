@@ -42,15 +42,15 @@ main {
     overflow: hidden;
     transform: translate(-50%, -52%);
     pointer-events: none;
-    opacity: 0.82;
+    opacity: 0.9;
     mask-image:
         /* Upper left */
-        radial-gradient(ellipse 19% 22% at 29% 33%, #000 45%, transparent 100%),
-        radial-gradient(ellipse 12% 15% at 21% 39%, #000d 18%, transparent 100%),
+        radial-gradient(ellipse 19% 22% at 29% 33%, #000 57%, transparent 100%),
+        radial-gradient(ellipse 12% 15% at 21% 39%, #000e 28%, transparent 100%),
         radial-gradient(ellipse 13% 16% at 35% 21%, #000c 14%, transparent 100%),
         /* Lower right */
-        radial-gradient(ellipse 20% 22% at 69% 66%, #000 45%, transparent 100%),
-        radial-gradient(ellipse 13% 16% at 78% 59%, #000d 18%, transparent 100%),
+        radial-gradient(ellipse 20% 22% at 69% 66%, #000 57%, transparent 100%),
+        radial-gradient(ellipse 13% 16% at 78% 59%, #000e 28%, transparent 100%),
         radial-gradient(ellipse 13% 16% at 64% 79%, #000c 14%, transparent 100%);
     mask-size: 100% 100%;
     mask-position: center;
