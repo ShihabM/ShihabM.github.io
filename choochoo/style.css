@@ -32,6 +32,19 @@ main {
     position: relative;
 }
 
+.app-artwork::before {
+    content: "";
+    position: absolute;
+    inset: -38%;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 34% 31% at 43% 27%, #f5a9ba59, transparent 100%),
+        radial-gradient(ellipse 33% 34% at 72% 33%, #8dc6ff70, transparent 100%),
+        radial-gradient(ellipse 31% 34% at 25% 54%, #9adcaa73, transparent 100%),
+        radial-gradient(ellipse 37% 33% at 44% 77%, #b8a1f579, transparent 100%),
+        radial-gradient(ellipse 29% 31% at 72% 68%, #f7d99866, transparent 100%);
+}
+
 .board-backdrop {
     position: absolute;
     z-index: -1;
@@ -91,6 +104,7 @@ main {
 }
 
 .app-icon {
+    position: relative;
     display: block;
     width: clamp(128px, 34vw, 176px);
     height: auto;
