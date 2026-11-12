@@ -107,8 +107,9 @@ h1 {
 
 h1 span {
     display: block;
-    margin-top: 5px;
-    font-size: 0.64em;
+    margin-top: 2px;
+    font-size: 0.6em;
+    font-weight: 600;
     letter-spacing: -0.035em;
 }
 
