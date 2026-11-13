@@ -18,6 +18,7 @@ body {
 }
 
 .landing-page {
+    --title-spacing-adjustment: 10px;
     grid-template-rows: 1fr auto;
 }
 
@@ -130,7 +131,7 @@ body {
 
 .landing-page h1 {
     width: 100%;
-    margin: calc(24px + var(--copy-offset) + clamp(12px, (100vh - 640px) / 5, 32px)) 0 0;
+    margin: calc(24px + var(--copy-offset) + clamp(12px, (100vh - 640px) / 5, 32px) + var(--title-spacing-adjustment)) 0 0;
     font-size: clamp(2.5rem, 9vw, 4rem);
     line-height: 1.05;
 }
@@ -183,6 +184,10 @@ body {
     justify-content: center;
     gap: 4px clamp(6px, 2vw, 12px);
     padding-top: 20px;
+}
+
+.landing-page .site-footer {
+    padding-top: calc(20px - var(--title-spacing-adjustment));
 }
 
 .site-footer .footer-copyright {
